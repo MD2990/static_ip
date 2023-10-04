@@ -5,7 +5,7 @@ import Show from "./Show";
 
 // get data function
 async function getData() {
-  dbConnect();
+ await dbConnect();
   const data = await IPS.find(
     {},
     { __v: 0 },

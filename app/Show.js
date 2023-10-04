@@ -26,7 +26,7 @@ export default function Show({ ip }) {
     return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
   }, [snap.searchResults, snap.offset, snap.PER_PAGE]);
 
-  const editFunc = (e) => `/ip/${e._id} `;
+  const editFunc = (e) => `/edit/${e._id} `;
 
   const tableHeads = useMemo(
     () => [
@@ -75,9 +75,7 @@ export default function Show({ ip }) {
   return (
     <>
       <IPsTopArea />
-
       <SearchLabels />
-
       <Wrap justify={"center"} align="center" ml={["5rem", "6rem"]}>
         <WrapItem overflowX={"auto"}>
           <Box>
