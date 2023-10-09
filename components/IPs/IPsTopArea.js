@@ -6,10 +6,13 @@ import { useSnapshot } from "valtio";
 import { TopBtn } from "../Lib/BTNs";
 import { substring } from "../../lib/helpers";
 import { FcPlus, FcPrint } from "react-icons/fc";
-import state  from "@app/store";
+import state from "@app/store";
+import { useRouter } from "next/navigation";
 
 export default function IPsTopArea() {
   const snap = useSnapshot(state);
+
+  const router = useRouter();
   function printPdf() {
     const rows = state.searchResults.map(
       ({ ip, location, device_type, added_by, added_date, notes }, index) => {
@@ -68,7 +71,7 @@ export default function IPsTopArea() {
       <WrapItem>
         <TopBtn
           title="Add IP"
-          /*  onClick={() => router.push("/addIp")} */
+          onClick={() => router.push("/add")}
           Icons={<FcPlus />}
         />
       </WrapItem>

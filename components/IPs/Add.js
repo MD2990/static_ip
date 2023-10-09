@@ -1,27 +1,28 @@
+"use client";
 import React from "react";
 import { Form, Formik } from "formik";
-import { post } from "../../utils/dbConnect";
-import { useRouter } from "next/router";
+import { post } from "@utils/dbConnect";
+import { useRouter } from "next/navigation";
 import { Divider, Wrap, Center } from "@chakra-ui/react";
 import {
   deviceValidationSchema,
   getCurrentDate,
-  
-} from "../../lib/yupValidationSchema";
+} from "@lib/yupValidationSchema";
 import {
   CustomDropdown,
   CustomField,
   CustomTextArea,
   FormBottomButton,
   Title,
-} from "../../components/Lib/Fields";
-import { deviceTypeOptions } from "../Lib/const";
+} from "@components/Lib/Fields";
+import { deviceTypeOptions } from "@components/Lib/const";
 
 export default function Add() {
   const router = useRouter();
 
   async function add(values) {
-    await post("ips", values);
+
+    await post(values);
   }
 
   return (

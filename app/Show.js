@@ -8,7 +8,7 @@ import Paginate from "@components/Lib/Paginate";
 import { handleDelete } from "@utils/dbConnect";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useSnapshot } from "valtio";
-import  state  from "@app/store";
+import state from "@app/store";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
@@ -23,8 +23,8 @@ export default function Show({ ip }) {
   }, [ip]);
 
   const rs = useCallback(() => {
-    return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
-  }, [snap.searchResults, snap.offset, snap.PER_PAGE]);
+    return state.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
+  }, [snap.PER_PAGE, snap.offset]);
 
   const editFunc = (e) => `/edit/${e._id} `;
 

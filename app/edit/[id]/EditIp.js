@@ -1,30 +1,37 @@
 "use client";
+import { handleDelete, handlePut } from "@utils/dbConnect";
+import { useRouter } from "next/navigation";
 import React from "react";
-
+import { Wrap, Center, Divider } from "@chakra-ui/react";
+import {
+  CustomDropdown,
+  CustomField,
+  CustomTextArea,
+  FormBottomButton,
+  Title,
+} from "@components/Lib/Fields";
+import { Form, Formik } from "formik";
+import { deviceValidationSchema } from "@lib/yupValidationSchema";
+import { deviceTypeOptions } from "@components/Lib/const";
+import { handleFormDelete } from "@components/Lib/Alerts";
 
 export default function EditIp({ data }) {
-
-  return<>
-    <pre>
-      {JSON.stringify(data, null, 2)}
-    </pre>
-  </>
-
-/*   const { location, device_type, added_by, _id, ip, added_date, notes } = data;
+  const { location, device_type, added_by, _id, ip, added_date, notes } = data;
 
   const router = useRouter();
 
   async function put(values) {
-    await handlePut({ values, api: "ips", router });
+
+    await handlePut({ values, _id });
   }
   async function onDelete() {
     await handleFormDelete({
-      handleDelete: () => handleDelete({ api: "ips", id: _id }),
+      handleDelete: () => handleDelete({ id: _id }),
       router: router,
     });
-  } */
+  }
 
-/*   return (
+  return (
     <>
       <Center mt="3%">
         <Title title={"Edit"} />
@@ -97,5 +104,5 @@ export default function EditIp({ data }) {
         }}
       </Formik>
     </>
-  ); */
+  );
 }

@@ -6,39 +6,42 @@ import autoTable from "jspdf-autotable";
 import { errorAlert, successAlert } from "/components/Lib/Alerts";
 import { getDateTime } from "../lib/helpers";
 
-
-
-export async function post(url, values) {
-  url = `${envUrl}/api`;
+export async function post(values) {
+  const url = `add/api`;
   await axios
     .post(url, values)
-    .then(() => successAlert("Added Successfully"))
+    .then((res) => {
+      return res.status === 200
+        ? successAlert("Added Successfully")
+        : errorAlert();
+    })
     .catch((error) => {
-      if (error.response.status === 409) {
-        errorAlert("🚫 IP Already Exist...");
-      } else errorAlert(error);
+      if (error) {
+        if (error?.response?.status === 409) {
+          errorAlert(`🚫 ${values.ip} Already Exist...`);
+        } else errorAlert(error);
+      }
     });
 }
 
-export const handlePut = async ({ values, api, router, msgs = true }) => {
+export const handlePut = async ({ values, _id, msgs = true }) => {
   const contentType = "application/json";
-  const { id } = router.query;
 
   try {
-    const res = await fetch(`${envUrl}/api/${api}/${id}`, {
+    const res = await fetch(`/edit/api?id=${_id}`, {
       method: "PUT",
       headers: {
         Accept: contentType,
         "Content-Type": contentType,
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify({ ...values, _id }),
     });
 
     // Throw error with status code in case Fetch API req failed
     if (res.ok && msgs) return successAlert("Updated Successfully");
 
     if (res.status === 409) {
-      return errorAlert("🚫 IP Already Exist...");
+      return errorAlert(`🚫 ${values.ip} Already exist...`);
     }
 
     if (!res.ok) return errorAlert();
@@ -47,8 +50,8 @@ export const handlePut = async ({ values, api, router, msgs = true }) => {
   }
 };
 
-export const handleDelete = async ({ api, id, msgs = true }) => {
-  api = `${envUrl}/api/${id}`;
+export const handleDelete = async ({ id, msgs = true }) => {
+  const api = `/api?id=${id}`;
   try {
     const res = await axios.delete(api);
 

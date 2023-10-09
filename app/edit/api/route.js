@@ -1,56 +1,95 @@
+import { dbConnect } from "@app/dbConnect";
 import IPS from "@models/ips/IPS";
 import { NextResponse } from "next/server";
-const mongodb = require("mongodb");
 var mongoose = require("mongoose");
-
-export async function PUT(request) {
-  try {
-    const { db } = await connectToDatabase();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    const { name } = await request.json();
-    if (!name || name.trim() === "" || !id)
-      return NextResponse.error({ error: "name is required", status: 400 });
-
-    await db
-      .collection("todo")
-      .updateOne(
-        { _id: new mongodb.ObjectId(id) },
-        { $set: { name: name?.trim() } }
-      )
-
-      .catch((err) => NextResponse.error({ error: err.message, status: 500 }));
-
-    return NextResponse.json({ done: true });
-  } catch (error) {
-    return NextResponse.error({ error: error.message, status: 500 });
-  }
-}
 
 export async function GET(request) {
   try {
+    await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    if (!id || !mongoose.Types.ObjectId.isValid('your id here')) {
+    if (!id || !mongoose.Types.ObjectId.isValid("your id here")) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 
-
-    // convert string to mongoose object id
-    const newId = new mongoose.Types.ObjectId(id);
-
-    const ip = await IPS.findById(newId ).catch((err) => {
+    const ip = await IPS.findById(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-
-
-    if (!ip) {
-      return NextResponse.json({ error: "ip not found", status: 404 });
-    }
 
     return NextResponse.json(ip);
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
+  }
+}
+export async function DELETE(request) {
+  try {
+        await dbConnect();
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "id is required", status: 404 });
+    }
+
+    await IPS.findByIdAndDelete(id).catch((err) => {
+      return NextResponse.json({ error: err.message, status: 500 });
+    });
+
+    return NextResponse.json({ done: true, status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message, status: 500 });
+  }
+}
+
+// PUT
+
+export async function PUT(request) {
+  try {
+        await dbConnect();
+
+    // Extract data from the JSON request
+    const { _id, ip, added_by, device_type, location } = await request.json();
+    if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
+      return NextResponse.json({ message: "id is required" }, { status: 404 });
+    }
+    // check if ip is already exist
+
+    // Attempt to save the data
+    return await IPS.findByIdAndUpdate(_id, {
+      ip,
+      added_by,
+      device_type,
+      location,
+    }).then(() =>
+      NextResponse.json(
+        {
+          message: "Added Successfully",
+        },
+        {
+          status: 200,
+        }
+      )
+    );
+
+    // Data was saved successfully
+  } catch (error) {
+    // check if the error is duplicate key
+    if (error.code === 11000) {
+      return NextResponse.json(
+        {
+          message: "IP Already Exists",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+
+    // Handle other errors
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

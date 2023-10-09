@@ -41,7 +41,6 @@ export async function dbConnect() {
   return cached.conn;
 }
 
-
 export function jsonify(obj) {
   return JSON.parse(JSON.stringify(obj));
 }

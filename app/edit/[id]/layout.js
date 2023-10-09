@@ -3,22 +3,15 @@ import EditIp from "./EditIp";
 
 // get data by id
 async function getData(id) {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_IP}/api?id=${id}}`);
-  const ips = await data.json();
-
-  console.log(ips);
-
-  return ips;
+  // use fetch to get data from an API
+  const res = await fetch(`${process.env.NEXT_PUBLIC_IP}/api?id=${id}`);
+  const data = await res.json();
+  return data;
 }
 
-export default function Layout({ params }) {
+export default async function Layout({ params }) {
   const id = params.id;
-  const ip = getData(id);
+  const ip = await getData(id);
 
-  return (
-    <>
-      <h1>Edit </h1>
-      <EditIp data={ip} />
-    </>
-  );
+  return <EditIp data={ip} />;
 }
