@@ -10,7 +10,6 @@ import {
   TableCaption,
   IconButton,
   Text,
-  Center,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import state from "../../app/store";
@@ -34,7 +33,7 @@ function MyTable({
           <Tr>
             {tableHeads.map((e, i) => {
               // to avoid showing and applying the sort order on the Non-sortable columns
-              const All_Keys = Object.keys(data[0]).filter(
+              const All_Keys = Object?.keys(data[0] || []).filter(
                 (d) =>
                   d.toLowerCase() ===
                   e.toString().toLowerCase().split(" ").sort().join("_")
@@ -137,27 +136,6 @@ function MyTable({
       </>
     );
   };
-
-  if (!data.length)
-    return (
-      <Center
-        whiteSpace={"nowrap"}
-        overflow="hidden"
-        textOverflow="ellipsis"
-        m="2"
-        p="2"
-      >
-        <Text
-          textAlign={"center"}
-          fontSize={["md", "xl", "2xl", "5xl"]}
-          fontWeight="black"
-          color={"gray.400"}
-          fontFamily="cursive"
-        >
-          Nothing to Show... &#128532;
-        </Text>
-      </Center>
-    );
 
   return (
     <Table variant="striped" colorScheme="telegram" size={size}>

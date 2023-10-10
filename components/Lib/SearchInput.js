@@ -32,14 +32,16 @@ function SearchInputField() {
 export default function SearchInput({ searchData }) {
   const snap = useSnapshot(state);
   const myFilter = ({ arr, searchTerm }) => {
-    const results = arr.filter((e) => {
-      return Object.keys(e).some((key) =>
-        e[key]
-          .toString()
-          .toLowerCase()
-          .includes(searchTerm.toString().toLowerCase().trim())
-      );
-    });
+    if (!arr.length) return [];
+    const results =
+      arr?.filter((e) => {
+        return Object.keys(e).some((key) =>
+          e[key]
+            .toString()
+            .toLowerCase()
+            .includes(searchTerm.toString().toLowerCase().trim())
+        );
+      }) || [];
 
     return results;
   };

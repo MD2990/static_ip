@@ -9,9 +9,17 @@ import { handleDelete } from "@utils/dbConnect";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useSnapshot } from "valtio";
 import state from "@app/store";
+import { useRouter } from "next/navigation";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+  }, [router]);
+
   useEffect(() => {
     state.ips = ip;
     state.searchTerm = "";

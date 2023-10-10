@@ -8,7 +8,7 @@ export async function GET(request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    if (!id || !mongoose.Types.ObjectId.isValid("your id here")) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 

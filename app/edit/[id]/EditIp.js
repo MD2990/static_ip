@@ -1,7 +1,7 @@
 "use client";
 import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
   CustomDropdown,
@@ -19,6 +19,12 @@ export default function EditIp({ data }) {
   const { location, device_type, added_by, _id, ip, added_date, notes } = data;
 
   const router = useRouter();
+
+
+    useEffect(() => {
+      router.refresh();
+    }, [router]);
+
 
   async function put(values) {
 
