@@ -9,6 +9,7 @@ import {
   Td,
   TableCaption,
   IconButton,
+  TableContainer,
   Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -90,7 +91,7 @@ function MyTable({
           </Tr>
         </Thead>
         <Tbody fontSize={["sm", "md", "lg", "xl"]}>
-          {data.map((t, index) => {
+          {data?.map((t, index) => {
             return (
               <Tr key={t._id}>
                 {tableRows.map((e, i) => (
@@ -138,6 +139,7 @@ function MyTable({
   };
 
   return (
+    <TableContainer> 
     <Table variant="striped" colorScheme="telegram" size={size}>
       <TableCaption
         userSelect={"none"}
@@ -157,6 +159,7 @@ function MyTable({
 
       <TheTable />
     </Table>
+    </TableContainer>
   );
 }
 

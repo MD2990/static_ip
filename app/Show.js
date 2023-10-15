@@ -1,6 +1,5 @@
 "use client";
 import IPsTopArea from "@/components/IPs/IPsTopArea";
-import { Box, Wrap, WrapItem } from "@chakra-ui/react";
 import SearchLabels from "@components/IPs/SearchLabels";
 import { handleFormDelete } from "@components/Lib/Alerts";
 import MyTable from "@components/Lib/MyTable";
@@ -9,16 +8,9 @@ import { handleDelete } from "@utils/dbConnect";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useSnapshot } from "valtio";
 import state from "@app/store";
-import { useRouter } from "next/navigation";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    router.refresh();
-  }, [router]);
 
   useEffect(() => {
     state.ips = ip;
@@ -31,10 +23,11 @@ export default function Show({ ip }) {
   }, [ip]);
 
   const rs = useCallback(() => {
-    return state.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
-  }, [snap.PER_PAGE, snap.offset]);
+    // eslint-disable-next-line valtio/state-snapshot-rule
+    return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
+  }, [snap.PER_PAGE, snap.offset, snap.searchResults]);
 
-  const editFunc = (e) => `/edit/${e._id} `;
+  const editFunc = (e) => `/edit_ip/${e._id} `;
 
   const tableHeads = useMemo(
     () => [
@@ -84,23 +77,17 @@ export default function Show({ ip }) {
     <>
       <IPsTopArea />
       <SearchLabels />
-      <Wrap justify={"center"} align="center" ml={["5rem", "6rem"]}>
-        <WrapItem overflowX={"auto"}>
-          <Box>
-            <MyTable
-              size={["sm", "md"]}
-              tableTitle={`Static IPs`}
-              data={rs()}
-              {...{
-                editFunc,
-                tableHeads,
-                tableRows,
-                deleteFunc,
-              }}
-            />
-          </Box>
-        </WrapItem>
-      </Wrap>
+      <MyTable
+        size={["sm", "md"]}
+        tableTitle={`Static IPs`}
+        data={rs()}
+        {...{
+          editFunc,
+          tableHeads,
+          tableRows,
+          deleteFunc,
+        }}
+      />
 
       <Paginate />
     </>

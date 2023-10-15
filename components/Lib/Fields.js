@@ -293,7 +293,6 @@ export const FormBottomButton = ({
           variant="outline"
           type="button"
           onClick={props.handleReset}
-          disabled={!props.dirty}
         >
           Reset
         </Button>

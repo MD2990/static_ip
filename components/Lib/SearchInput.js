@@ -32,7 +32,7 @@ function SearchInputField() {
 export default function SearchInput({ searchData }) {
   const snap = useSnapshot(state);
   const myFilter = ({ arr, searchTerm }) => {
-    if (!arr.length) return [];
+    if (!arr.length || typeof arr === "string") return [];
     const results =
       arr?.filter((e) => {
         return Object.keys(e).some((key) =>

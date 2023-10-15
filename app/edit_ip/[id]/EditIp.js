@@ -1,7 +1,7 @@
 "use client";
 import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
   CustomDropdown,
@@ -13,27 +13,33 @@ import {
 import { Form, Formik } from "formik";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import { deviceTypeOptions } from "@components/Lib/const";
-import { handleFormDelete } from "@components/Lib/Alerts";
+import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
 export default function EditIp({ data }) {
   const { location, device_type, added_by, _id, ip, added_date, notes } = data;
-
   const router = useRouter();
 
-
-    useEffect(() => {
-      router.refresh();
-    }, [router]);
-
-
   async function put(values) {
-
-    await handlePut({ values, _id });
+    try {
+      await handlePut({ values, _id, api: "/edit_ip/api" }).then(() => {
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      });
+    } catch (error) {
+      errorAlert(error.message);
+    }
   }
   async function onDelete() {
     await handleFormDelete({
-      handleDelete: () => handleDelete({ id: _id }),
-      router: router,
+      handleDelete: () => {
+        handleDelete({ id: _id });
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      },
     });
   }
 
@@ -52,10 +58,8 @@ export default function EditIp({ data }) {
           added_date,
           notes,
         }}
-        onSubmit={async (values, actions) => {
-          actions.setSubmitting(false);
+        onSubmit={async (values) => {
           await put(values);
-          router.back();
         }}
         validationSchema={deviceValidationSchema}
       >

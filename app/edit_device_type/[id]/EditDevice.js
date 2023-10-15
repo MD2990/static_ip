@@ -1,13 +1,8 @@
 "use client";
-import React from "react";
-import { Form, Formik } from "formik";
-import { post } from "@utils/dbConnect";
+import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import { Divider, Wrap, Center } from "@chakra-ui/react";
-import {
-  deviceValidationSchema,
-  getCurrentDate,
-} from "@lib/yupValidationSchema";
+import React from "react";
+import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
   CustomDropdown,
   CustomField,
@@ -15,33 +10,56 @@ import {
   FormBottomButton,
   Title,
 } from "@components/Lib/Fields";
+import { Form, Formik } from "formik";
+import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import { deviceTypeOptions } from "@components/Lib/const";
+import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
-export default function Add() {
+export default function EditIp({ data }) {
+  const { location, device_type, added_by, _id, ip, added_date, notes } = data;
   const router = useRouter();
 
-  async function add(values) {
-    await post(values, "/add_ip/api");
-    router.refresh();
+  async function put(values) {
+    try {
+      await handlePut({ values, _id }).then(() => {
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      });
+    } catch (error) {
+      errorAlert(error.message);
+    }
+  }
+  async function onDelete() {
+    await handleFormDelete({
+      handleDelete: () => {
+        handleDelete({ id: _id });
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      },
+    });
   }
 
   return (
     <>
-      <Center mt="0.5%">
-        <Title title={"Add New IP"} />
+      <Center mt="3%">
+        <Title title={"Edit"} />
       </Center>
       <Formik
         initialValues={{
-          ip: "",
-          location: "",
-          device_type: "Printer",
-          added_by: "",
-          added_date: getCurrentDate(),
-          notes: "No Notes",
+          location,
+          device_type,
+          added_by,
+
+          ip,
+          added_date,
+          notes,
         }}
-        onSubmit={async (values, actions) => {
-          actions.setSubmitting(false);
-          await add(values);
+        onSubmit={async (values) => {
+          await put(values);
         }}
         validationSchema={deviceValidationSchema}
       >
@@ -51,12 +69,12 @@ export default function Add() {
               <Center>
                 <Wrap
                   shadow="lg"
-                  maxW={"45%"}
-                  minW={"35%"}
+                  maxW={"50%"}
+                  minW={"8rem"}
                   justify="center"
                   borderWidth="1px"
                   borderRadius="lg"
-                  m={[4, 6, 8]}
+                  m={[4, 6, 8, 10]}
                   spacing={[2, 3, 4, 6]}
                   p={[1, 2, 3, 4]}
                 >
@@ -65,10 +83,10 @@ export default function Add() {
                     fieldName="location"
                     labelName="Location/Office"
                   />
-
                   <CustomDropdown
                     fieldName="device_type"
                     labelName="Device Type"
+                    val={device_type}
                     arr={deviceTypeOptions}
                     keys={"b"}
                   />
@@ -83,7 +101,12 @@ export default function Add() {
 
                   <Divider color="gray.100" />
 
-                  <FormBottomButton router={router} props={props} />
+                  <FormBottomButton
+                    router={router}
+                    props={props}
+                    deleteBtn
+                    onDelete={onDelete}
+                  />
                 </Wrap>
               </Center>
             </Form>

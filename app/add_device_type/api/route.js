@@ -1,5 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
 import IPS from "@models/ips/IPS";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -8,13 +9,14 @@ export async function POST(request) {
     await dbConnect();
 
     // Extract data from the JSON request
-    const { ip, added_by, device_type, location } = await request.json();
+    let { ip, added_by, device_type, location, added_date } =
+      await request.json();
 
     // check if the ip already exists
 
-    const ipExists = await IPS.countDocuments({ ip: ip }).exec();
+    const ipExists = await IPS.findOne({ ip: ip });
 
-    if (ipExists > 0)
+    if (ipExists)
       return NextResponse.json(
         {
           message: "IP Already Exists",
@@ -24,12 +26,14 @@ export async function POST(request) {
         }
       );
 
+    revalidateTag("home");
     // Attempt to save the data
     return await IPS.create({
       ip,
       added_by,
       device_type,
       location,
+      added_date,
     }).then(() =>
       NextResponse.json(
         {

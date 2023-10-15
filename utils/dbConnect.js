@@ -6,10 +6,10 @@ import autoTable from "jspdf-autotable";
 import { errorAlert, successAlert } from "/components/Lib/Alerts";
 import { getDateTime } from "../lib/helpers";
 
-export async function post(values) {
-  const url = `add/api`;
+export async function post(values,api) {
+  
   await axios
-    .post(url, values)
+    .post(api, values)
     .then((res) => {
       return res.status === 200
         ? successAlert("Added Successfully")
@@ -24,11 +24,11 @@ export async function post(values) {
     });
 }
 
-export const handlePut = async ({ values, _id, msgs = true }) => {
+export const handlePut = async ({ values, _id, msgs = true , api}) => {
   const contentType = "application/json";
 
   try {
-    const res = await fetch(`/edit/api?id=${_id}`, {
+    const res = await fetch(`${api}?id=${_id}`, {
       method: "PUT",
       headers: {
         Accept: contentType,
@@ -70,8 +70,6 @@ export const toPDF = ({
   style = "p",
   coordinates = 300,
   leftTitle,
-
-  moreDetails,
 }) => {
   var doc = new jsPDF(style, "pt"); // l or p
 

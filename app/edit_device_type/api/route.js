@@ -1,5 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
 import IPS from "@models/ips/IPS";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
@@ -8,6 +9,7 @@ export async function GET(request) {
     await dbConnect();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
@@ -23,7 +25,7 @@ export async function GET(request) {
 }
 export async function DELETE(request) {
   try {
-        await dbConnect();
+    await dbConnect();
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -35,7 +37,8 @@ export async function DELETE(request) {
     await IPS.findByIdAndDelete(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-
+    /*   revalidateTag("home");
+    revalidateTag("id"); */
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
@@ -46,13 +49,15 @@ export async function DELETE(request) {
 
 export async function PUT(request) {
   try {
-        await dbConnect();
+    await dbConnect();
 
     // Extract data from the JSON request
-    const { _id, ip, added_by, device_type, location } = await request.json();
+    const { _id, ip, added_by, device_type, location, added_date } =
+      await request.json();
     if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
       return NextResponse.json({ message: "id is required" }, { status: 404 });
     }
+
     // check if ip is already exist
 
     // Attempt to save the data
@@ -61,16 +66,19 @@ export async function PUT(request) {
       added_by,
       device_type,
       location,
-    }).then(() =>
-      NextResponse.json(
+      added_date,
+    }).then(() => {
+      revalidateTag("home");
+      revalidateTag("id");
+      return NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      )
-    );
+      );
+    });
 
     // Data was saved successfully
   } catch (error) {

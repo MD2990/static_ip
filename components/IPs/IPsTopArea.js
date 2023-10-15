@@ -71,7 +71,7 @@ export default function IPsTopArea() {
       <WrapItem>
         <TopBtn
           title="Add IP"
-          onClick={() => router.push("/add")}
+          onClick={() => router.push("/add_ip")}
           Icons={<FcPlus />}
         />
       </WrapItem>
