@@ -11,7 +11,7 @@ import {
   Title,
 } from "@components/Lib/Fields";
 import { Form, Formik } from "formik";
-import { deviceValidationSchema } from "@lib/yupValidationSchema";
+import { empValidationSchema } from "@lib/yupValidationSchema";
 import { deviceTypeOptions } from "@components/Lib/const";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
@@ -61,7 +61,7 @@ export default function EditIp({ data }) {
         onSubmit={async (values) => {
           await put(values);
         }}
-        validationSchema={deviceValidationSchema}
+        validationSchema={empValidationSchema}
       >
         {(props) => {
           return (
@@ -91,11 +91,6 @@ export default function EditIp({ data }) {
                     keys={"b"}
                   />
                   <CustomField fieldName="added_by" labelName="Added By" />
-                  <CustomField
-                    fieldName="added_date"
-                    labelName="Added Date"
-                    type="date"
-                  />
 
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 

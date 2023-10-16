@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { handleDelete, handlePut } from "../../utils/dbConnect";
 import { useRouter } from "next/router";
 import { Divider, Wrap, Center } from "@chakra-ui/react";
-import { deviceValidationSchema } from "../../lib/yupValidationSchema";
+import { empValidationSchema } from "../../lib/yupValidationSchema";
 import {
   CustomDropdown,
   CustomField,
@@ -15,7 +15,7 @@ import { handleFormDelete } from "../Lib/Alerts";
 import { deviceTypeOptions } from "../Lib/const";
 
 export default function EditIps({ ips }) {
-  const { location,  device_type,  added_by, _id, ip, added_date, notes } = ips;
+  const { location, device_type, added_by, _id, ip, added_date, notes } = ips;
 
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function EditIps({ ips }) {
   }
   async function onDelete() {
     await handleFormDelete({
-      handleDelete:()=> handleDelete({ api: "ips", id: _id }),
+      handleDelete: () => handleDelete({ api: "ips", id: _id }),
       router: router,
     });
   }
@@ -38,7 +38,7 @@ export default function EditIps({ ips }) {
         initialValues={{
           location,
           device_type,
-           added_by,
+          added_by,
 
           ip,
           added_date,
@@ -49,7 +49,7 @@ export default function EditIps({ ips }) {
           await put(values);
           router.back();
         }}
-        validationSchema={deviceValidationSchema}
+        validationSchema={empValidationSchema}
       >
         {(props) => {
           return (
@@ -79,11 +79,6 @@ export default function EditIps({ ips }) {
                     keys={"b"}
                   />
                   <CustomField fieldName="added_by" labelName="Added By" />
-                  <CustomField
-                    fieldName="added_date"
-                    labelName="Added Date"
-                    type="date"
-                  />
 
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 

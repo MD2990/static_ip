@@ -7,7 +7,6 @@ async function getData() {
       next: { tags: ["home"] },
     });
     const ip = (await data?.json()) || [];
-
     return ip;
   } catch (error) {
     return error.message;

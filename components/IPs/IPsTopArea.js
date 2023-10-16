@@ -5,7 +5,12 @@ import { toPDF } from "../../utils/dbConnect";
 import { useSnapshot } from "valtio";
 import { TopBtn } from "../Lib/BTNs";
 import { substring } from "../../lib/helpers";
-import { FcPlus, FcPrint } from "react-icons/fc";
+import {
+  FcBusinessman,
+  FcMultipleSmartphones,
+  FcPlus,
+  FcPrint,
+} from "react-icons/fc";
 import state from "@app/store";
 import { useRouter } from "next/navigation";
 
@@ -15,14 +20,18 @@ export default function IPsTopArea() {
   const router = useRouter();
   function printPdf() {
     const rows = state.searchResults.map(
-      ({ ip, location, device_type, added_by, added_date, notes }, index) => {
+      (
+        { ip, location, device_type, added_by, createdAt, updatedAt, notes },
+        index
+      ) => {
         index += 1;
         const data = {
           ip,
           location,
           device_type,
           added_by,
-          added_date,
+          createdAt,
+          updatedAt,
           notes,
           index,
         };
@@ -37,7 +46,8 @@ export default function IPsTopArea() {
       { title: "Location", key: "location" },
       { title: "Device Type", key: "device_type" },
       { title: "Added By", key: "added_by" },
-      { title: "Added Date", key: "added_date" },
+      { title: "Added", key: "createdAt" },
+      { title: "Updated", key: "updatedAt" },
       { title: "Notes", key: "notes" },
     ];
 
@@ -54,7 +64,7 @@ export default function IPsTopArea() {
 
   return (
     <Wrap
-      justify={"center"}
+      justify={"space-around"}
       direction={"row"}
       boxShadow={"lg"}
       p={["1", "2", "3", "4"]}
@@ -67,7 +77,10 @@ export default function IPsTopArea() {
         <WrapItem>
           <TopBtn title="Print" onClick={printPdf} Icons={<FcPrint />} />
         </WrapItem>
-      ) : null}
+      ) : null}{" "}
+      <WrapItem>
+        <SearchInput searchData={state.ips} />
+      </WrapItem>
       <WrapItem>
         <TopBtn
           title="Add IP"
@@ -75,9 +88,19 @@ export default function IPsTopArea() {
           Icons={<FcPlus />}
         />
       </WrapItem>
-
       <WrapItem>
-        <SearchInput searchData={state.ips} />
+        <TopBtn
+          title="Add Employee"
+          onClick={() => router.push("/add_emp")}
+          Icons={<FcBusinessman />}
+        />
+      </WrapItem>
+      <WrapItem>
+        <TopBtn
+          title="Add Device Type"
+          onClick={() => router.push("/add_device_type")}
+          Icons={<FcMultipleSmartphones />}
+        />
       </WrapItem>
       <WrapItem align="center" userSelect={"none"}>
         <Stat>

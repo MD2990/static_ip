@@ -36,7 +36,8 @@ export default function Show({ ip }) {
       "Location",
       "device type",
       "Added By",
-      "Added Date",
+      "Created",
+      "Updated",
       "Notes",
       "Edit",
       "Delete",
@@ -51,7 +52,8 @@ export default function Show({ ip }) {
       "location",
       "device_type",
       "added_by",
-      "added_date",
+      "createdAt",
+      "updatedAt",
       "notes",
       "edit",
       "delete",
@@ -78,7 +80,7 @@ export default function Show({ ip }) {
       <IPsTopArea />
       <SearchLabels />
       <MyTable
-        size={["sm", "md"]}
+   
         tableTitle={`Static IPs`}
         data={rs()}
         {...{

@@ -13,11 +13,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import state from "../../app/store";
 import { useSnapshot } from "valtio";
+import state from "@app/store";
 
 function MyTable({
-  size = ["sm", "md", "lg"],
+  size = "sm",
   data,
   tableTitle,
   deleteFunc,
@@ -42,9 +42,8 @@ function MyTable({
               return (
                 <Th
                   textAlign="left"
-                  p="0.5"
+                  p={0.5}
                   userSelect={"none"}
-                  cursor={All_Keys.length ? `pointer` : "not-allowed"}
                   key={i}
                   onClick={() => {
                     // get all keys from data and filter them as user clicks on the table headers
@@ -90,12 +89,14 @@ function MyTable({
             })}
           </Tr>
         </Thead>
-        <Tbody fontSize={["sm", "md", "lg", "xl"]}>
+
+        <Tbody fontSize={["sm", "md", "lg"]}>
           {data?.map((t, index) => {
             return (
               <Tr key={t._id}>
                 {tableRows.map((e, i) => (
                   <Td
+                    p={0.7}
                     key={i}
                     textOverflow={"ellipsis"}
                     whiteSpace="nowrap"
@@ -113,7 +114,7 @@ function MyTable({
                           icon={<EditIcon />}
                           variant="unstyled"
                           color={"gray.400"}
-                          fontSize={["xl", "2xl", "3xl"]}
+                          fontSize={["xl", "2xl"]}
                         />
                       </Link>
                     )}
@@ -125,7 +126,7 @@ function MyTable({
                         onClick={() => deleteFunc(t)}
                         variant="unstyled"
                         color="red.400"
-                        fontSize={["xl", "2xl", "3xl"]}
+                        fontSize={["xl", "2xl"]}
                       />
                     )}
                   </Td>
@@ -139,26 +140,26 @@ function MyTable({
   };
 
   return (
-    <TableContainer> 
-    <Table variant="striped" colorScheme="telegram" size={size}>
-      <TableCaption
-        userSelect={"none"}
-        placement="top"
-        fontSize={["xl", "2xl", "3xl", "5xl"]}
-        textDecoration="underline"
-        textShadow={`0px 0px 10px #d0d9d2`}
-      >
-        <Text
-          as={"span"}
+    <TableContainer  m={2}>
+      <Table variant="striped" colorScheme="telegram" size={size}>
+        <TableCaption
+          userSelect={"none"}
+          placement="top"
+          fontSize={["xl", "2xl", "3xl", "5xl"]}
           textDecoration="underline"
-          fontSize={["2xl", "4xl", "5xl"]}
+          textShadow={`0px 0px 10px #d0d9d2`}
         >
-          {tableTitle}
-        </Text>
-      </TableCaption>
+          <Text
+            as={"span"}
+            textDecoration="underline"
+            fontSize={["2xl", "4xl", "5xl"]}
+          >
+            {tableTitle}
+          </Text>
+        </TableCaption>
 
-      <TheTable />
-    </Table>
+        <TheTable />
+      </Table>
     </TableContainer>
   );
 }

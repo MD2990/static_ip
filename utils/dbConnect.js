@@ -6,8 +6,7 @@ import autoTable from "jspdf-autotable";
 import { errorAlert, successAlert } from "/components/Lib/Alerts";
 import { getDateTime } from "../lib/helpers";
 
-export async function post(values,api) {
-  
+export async function post({values,api,name}) {
   await axios
     .post(api, values)
     .then((res) => {
@@ -18,7 +17,7 @@ export async function post(values,api) {
     .catch((error) => {
       if (error) {
         if (error?.response?.status === 409) {
-          errorAlert(`🚫 ${values.ip} Already Exist...`);
+          errorAlert(`🚫 ${name} Already Exist...`);
         } else errorAlert(error);
       }
     });

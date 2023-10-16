@@ -1,7 +1,8 @@
 import { dbConnect } from "@app/dbConnect";
+import { convertDate } from "@lib/helpers";
 import IPS from "@models/ips/IPS";
 import mongoose from "mongoose";
-import {  revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function DELETE(request) {
@@ -28,8 +29,10 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const ip = await IPS.find({}).sort({ added_date: -1 });
-    
+    let ip = await IPS.find({}).sort({ updatedAt: -1 });
+
+    // convert createdAt to a normal date format (not a timestamp)
+    ip = convertDate(ip);
 
     return NextResponse.json(ip);
   } catch (error) {

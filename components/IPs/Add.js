@@ -4,10 +4,7 @@ import { Form, Formik } from "formik";
 import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import { Divider, Wrap, Center } from "@chakra-ui/react";
-import {
-  deviceValidationSchema,
-  getCurrentDate,
-} from "@lib/yupValidationSchema";
+import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import {
   CustomDropdown,
   CustomField,
@@ -21,7 +18,7 @@ export default function Add() {
   const router = useRouter();
 
   async function add(values) {
-    await post(values, "/add_ip/api");
+    await post({ values, api: "/add_ip/api", name: values.ip });
     router.refresh();
   }
 
@@ -36,7 +33,6 @@ export default function Add() {
           location: "",
           device_type: "Printer",
           added_by: "",
-          added_date: getCurrentDate(),
           notes: "No Notes",
         }}
         onSubmit={async (values, actions) => {
@@ -73,11 +69,6 @@ export default function Add() {
                     keys={"b"}
                   />
                   <CustomField fieldName="added_by" labelName="Added By" />
-                  <CustomField
-                    fieldName="added_date"
-                    labelName="Added Date"
-                    type="date"
-                  />
 
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 
