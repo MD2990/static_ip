@@ -1,5 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
-import IPS from "@models/ips/IPS";
+import EMP from "@models/ips/EMP";
+
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
@@ -14,7 +15,7 @@ export async function GET(request) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 
-    const ip = await IPS.findById(id).catch((err) => {
+    const ip = await EMP.findById(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
 
@@ -34,11 +35,11 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 
-    await IPS.findByIdAndDelete(id).catch((err) => {
+    await EMP.findByIdAndDelete(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-    /*   revalidateTag("home");
-    revalidateTag("id"); */
+    revalidateTag("emp_home");
+
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
@@ -52,8 +53,7 @@ export async function PUT(request) {
     await dbConnect();
 
     // Extract data from the JSON request
-    const { _id, ip, added_by, device_type, location, added_date } =
-      await request.json();
+    const { _id, emp_name } = await request.json();
     if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
       return NextResponse.json({ message: "id is required" }, { status: 404 });
     }
@@ -61,15 +61,11 @@ export async function PUT(request) {
     // check if ip is already exist
 
     // Attempt to save the data
-    return await IPS.findByIdAndUpdate(_id, {
-      ip,
-      added_by,
-      device_type,
-      location,
-      added_date,
+    return await EMP.findByIdAndUpdate(_id, {
+      emp_name,
     }).then(() => {
-      revalidateTag("home");
-      revalidateTag("id");
+      revalidateTag("emp_home");
+      revalidateTag("emp_id");
       return NextResponse.json(
         {
           message: "Added Successfully",
@@ -86,7 +82,7 @@ export async function PUT(request) {
     if (error.code === 11000) {
       return NextResponse.json(
         {
-          message: "IP Already Exists",
+          message: "Employee Already Exists",
         },
         {
           status: 409,

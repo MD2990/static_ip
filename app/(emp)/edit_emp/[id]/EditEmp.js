@@ -3,25 +3,23 @@ import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
-import {
-  CustomDropdown,
-  CustomField,
-  CustomTextArea,
-  FormBottomButton,
-  Title,
-} from "@components/Lib/Fields";
+import { CustomField, FormBottomButton, Title } from "@components/Lib/Fields";
 import { Form, Formik } from "formik";
 import { empValidationSchema } from "@lib/yupValidationSchema";
-import { deviceTypeOptions } from "@components/Lib/const";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
-export default function EditIp({ data }) {
-  const { location, device_type, added_by, _id, ip, added_date, notes } = data;
+export default function EditEmp({ data }) {
+  const { emp_name, _id } = data;
   const router = useRouter();
 
   async function put(values) {
     try {
-      await handlePut({ values, _id }).then(() => {
+      await handlePut({
+        values,
+        _id,
+        api: "/edit_emp/api",
+        field_name: values.emp_name,
+      }).then(() => {
         router.refresh();
         setTimeout(() => {
           router.back();
@@ -34,7 +32,7 @@ export default function EditIp({ data }) {
   async function onDelete() {
     await handleFormDelete({
       handleDelete: () => {
-        handleDelete({ id: _id });
+        handleDelete({ api: `/edit_emp/api?id=${_id}` });
         router.refresh();
         setTimeout(() => {
           router.back();
@@ -46,17 +44,11 @@ export default function EditIp({ data }) {
   return (
     <>
       <Center mt="3%">
-        <Title title={"Edit"} />
+        <Title title={"Edit Employee Details"} />
       </Center>
       <Formik
         initialValues={{
-          location,
-          device_type,
-          added_by,
-
-          ip,
-          added_date,
-          notes,
+          emp_name,
         }}
         onSubmit={async (values) => {
           await put(values);
@@ -78,25 +70,8 @@ export default function EditIp({ data }) {
                   spacing={[2, 3, 4, 6]}
                   p={[1, 2, 3, 4]}
                 >
-                  <CustomField fieldName="ip" labelName="IP" />
-                  <CustomField
-                    fieldName="location"
-                    labelName="Location/Office"
-                  />
-                  <CustomDropdown
-                    fieldName="device_type"
-                    labelName="Device Type"
-                    val={device_type}
-                    arr={deviceTypeOptions}
-                    keys={"b"}
-                  />
-                  <CustomField fieldName="added_by" labelName="Added By" />
-                  <CustomField fieldName="added_date" type="date" />
-
-                  <CustomTextArea fieldName="notes" labelName="Notes" />
-
+                  <CustomField fieldName="emp_name" labelName="Employee Name" />{" "}
                   <Divider color="gray.100" />
-
                   <FormBottomButton
                     router={router}
                     props={props}

@@ -12,7 +12,7 @@ export async function POST(request) {
 
     // check if the ip already exists
 
-    const empExists = await EMP.findOne({ emp_name: emp_name.toUpperCase() });
+    const empExists = await EMP.findOne({  emp_name });
 
     if (empExists)
       return NextResponse.json(

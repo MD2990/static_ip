@@ -11,17 +11,22 @@ import {
   Title,
 } from "@components/Lib/Fields";
 import { Form, Formik } from "formik";
-import { empValidationSchema } from "@lib/yupValidationSchema";
+import { ipValidationSchema } from "@lib/yupValidationSchema";
 import { deviceTypeOptions } from "@components/Lib/const";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
 export default function EditIp({ data }) {
-  const { location, device_type, added_by, _id, ip, added_date, notes } = data;
+  const { location, device_type, added_by, _id, ip, notes } = data;
   const router = useRouter();
 
   async function put(values) {
     try {
-      await handlePut({ values, _id, api: "/edit_ip/api" }).then(() => {
+      await handlePut({
+        values,
+        _id,
+        api: "/edit_ip/api",
+        field_name: values.ip,
+      }).then(() => {
         router.refresh();
         setTimeout(() => {
           router.back();
@@ -53,15 +58,13 @@ export default function EditIp({ data }) {
           location,
           device_type,
           added_by,
-
           ip,
-          added_date,
           notes,
         }}
         onSubmit={async (values) => {
           await put(values);
         }}
-        validationSchema={empValidationSchema}
+        validationSchema={ipValidationSchema}
       >
         {(props) => {
           return (

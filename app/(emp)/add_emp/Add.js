@@ -24,8 +24,9 @@ export default function Add() {
         initialValues={{
           emp_name: "",
         }}
-        onSubmit={async (values) => {
+        onSubmit={async (values, actions) => {
           await add(values);
+          actions.resetForm();
         }}
         validationSchema={empValidationSchema}
       >

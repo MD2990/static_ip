@@ -1,5 +1,5 @@
 "use client";
-import IPsTopArea from "@/components/IPs/IPsTopArea";
+import IPsTopArea from "@components/IPs/IPsTopArea";
 import SearchLabels from "@components/IPs/SearchLabels";
 import { handleFormDelete } from "@components/Lib/Alerts";
 import MyTable from "@components/Lib/MyTable";
@@ -8,9 +8,11 @@ import { handleDelete } from "@utils/dbConnect";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useSnapshot } from "valtio";
 import state from "@app/store";
+import { useRouter } from "next/navigation";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
+  const router = useRouter();
 
   useEffect(() => {
     state.ips = ip;
@@ -27,7 +29,7 @@ export default function Show({ ip }) {
     return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
   }, [snap.PER_PAGE, snap.offset, snap.searchResults]);
 
-  const editFunc = (e) => `/edit_ip/${e._id} `;
+  const editFunc = (e) => `/edit_ip/${e._id}`;
 
   const tableHeads = useMemo(
     () => [
@@ -61,26 +63,26 @@ export default function Show({ ip }) {
     []
   );
   // create delete Function
-  const deleteFunc = useCallback(async (e) => {
-    await handleFormDelete({
-      handleDelete: () =>
-        handleDelete({ id: e._id }).then(() => {
-          state.searchResults = state.searchResults.filter(
-            (p) => p._id !== e._id
-          );
-          state.ips = state.ips.filter((p) => p._id !== e._id);
-          state.searchTerm = "";
-          state.isDisabled = false;
-        }),
-    });
-  }, []);
+  const deleteFunc = useCallback(
+    async (e) => {
+      await handleFormDelete({
+        handleDelete: () =>
+          handleDelete({ api: `/api?id=${e._id}` }).then(() => {
+            // filter out the deleted item
+            state.ips = state.ips.filter((item) => item._id !== e._id);
+            router.refresh();
+            state.searchTerm = "";
+          }),
+      });
+    },
+    [router]
+  );
 
   return (
     <>
-      <IPsTopArea />
+      <IPsTopArea data={state.ips} path={'/add_ip'} title={'Add New IP'} />
       <SearchLabels />
       <MyTable
-   
         tableTitle={`Static IPs`}
         data={rs()}
         {...{

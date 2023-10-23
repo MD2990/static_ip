@@ -24,7 +24,10 @@ export default function EditIps({ ips }) {
   }
   async function onDelete() {
     await handleFormDelete({
-      handleDelete: () => handleDelete({ api: "ips", id: _id }),
+      handleDelete: () => handleDelete(
+    { api: `/edit_ip/api?id=${_id}`
+    
+    }),
       router: router,
     });
   }

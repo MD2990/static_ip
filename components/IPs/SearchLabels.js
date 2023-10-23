@@ -27,7 +27,7 @@ function SearchLabels() {
   const unique = useCallback(
     () =>
       // eslint-disable-next-line no-undef
-      [...new Set(state.ips.map((item) => item.device_type))],
+      [...new Set(state.emp.map((item) => item.device_type))],
     []
   );
 
@@ -92,8 +92,8 @@ function SearchLabels() {
                   textShadow="0px 0px 6px white"
                 >
                   {Math.round(
-                    (state.ips.filter((item) => item.device_type === e).length /
-                      state.ips.length) *
+                    (state.emp.filter((item) => item.device_type === e).length /
+                      state.emp.length) *
                       100
                   )}
                   %

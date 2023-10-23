@@ -97,6 +97,7 @@ function MyTable({
                 {tableRows.map((e, i) => (
                   <Td
                     p={0.7}
+                    px={[1, 2]}
                     key={i}
                     textOverflow={"ellipsis"}
                     whiteSpace="nowrap"
@@ -140,7 +141,7 @@ function MyTable({
   };
 
   return (
-    <TableContainer  m={2}>
+    <TableContainer m={2}>
       <Table variant="striped" colorScheme="telegram" size={size}>
         <TableCaption
           userSelect={"none"}

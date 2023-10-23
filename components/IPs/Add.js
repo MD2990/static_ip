@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import { Divider, Wrap, Center } from "@chakra-ui/react";
-import { deviceValidationSchema } from "@lib/yupValidationSchema";
+import { ipValidationSchema } from "@lib/yupValidationSchema";
 import {
   CustomDropdown,
   CustomField,
@@ -39,7 +39,7 @@ export default function Add() {
           actions.setSubmitting(false);
           await add(values);
         }}
-        validationSchema={deviceValidationSchema}
+        validationSchema={ipValidationSchema}
       >
         {(props) => {
           return (

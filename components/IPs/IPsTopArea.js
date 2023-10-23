@@ -10,11 +10,13 @@ import {
   FcMultipleSmartphones,
   FcPlus,
   FcPrint,
+  FcViewDetails,
 } from "react-icons/fc";
 import state from "@app/store";
 import { useRouter } from "next/navigation";
+import Menus, { MenuItems } from "./Menus";
 
-export default function IPsTopArea() {
+export default function IPsTopArea({data, path , title}) {
   const snap = useSnapshot(state);
 
   const router = useRouter();
@@ -79,29 +81,23 @@ export default function IPsTopArea() {
         </WrapItem>
       ) : null}{" "}
       <WrapItem>
-        <SearchInput searchData={state.ips} />
+        <SearchInput searchData={data} />
       </WrapItem>
       <WrapItem>
         <TopBtn
-          title="Add IP"
-          onClick={() => router.push("/add_ip")}
+          title={title}
+          onClick={() => router.push(path)}
           Icons={<FcPlus />}
         />
       </WrapItem>
-      <WrapItem>
-        <TopBtn
-          title="Add Employee"
-          onClick={() => router.push("/add_emp")}
-          Icons={<FcBusinessman />}
-        />
-      </WrapItem>
-      <WrapItem>
-        <TopBtn
-          title="Add Device Type"
-          onClick={() => router.push("/add_device_type")}
-          Icons={<FcMultipleSmartphones />}
-        />
-      </WrapItem>
+      <Menus title="Employees">
+        <MenuItems text="Add" path="/add_emp" Icons={FcBusinessman} />
+        <MenuItems text="Show" path="/show_emp" Icons={FcViewDetails} />
+      </Menus>
+      <Menus title="Devices">
+        <MenuItems text="Add" path="/device" Icons={FcMultipleSmartphones} />
+        <MenuItems text="Show" path="/show_device" Icons={FcViewDetails} />
+      </Menus>
       <WrapItem align="center" userSelect={"none"}>
         <Stat>
           <StatLabel

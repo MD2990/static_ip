@@ -23,7 +23,7 @@ export async function post({values,api,name}) {
     });
 }
 
-export const handlePut = async ({ values, _id, msgs = true , api}) => {
+export const handlePut = async ({ values, _id, msgs = true , api, field_name}) => {
   const contentType = "application/json";
 
   try {
@@ -40,7 +40,7 @@ export const handlePut = async ({ values, _id, msgs = true , api}) => {
     if (res.ok && msgs) return successAlert("Updated Successfully");
 
     if (res.status === 409) {
-      return errorAlert(`🚫 ${values.ip} Already exist...`);
+      return errorAlert(`🚫 ${field_name} Already exist...`);
     }
 
     if (!res.ok) return errorAlert();
@@ -49,8 +49,7 @@ export const handlePut = async ({ values, _id, msgs = true , api}) => {
   }
 };
 
-export const handleDelete = async ({ id, msgs = true }) => {
-  const api = `/api?id=${id}`;
+export const handleDelete = async ({ api, msgs = true }) => {
   try {
     const res = await axios.delete(api);
 
