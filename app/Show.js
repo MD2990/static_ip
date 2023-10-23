@@ -1,5 +1,4 @@
 "use client";
-import IPsTopArea from "@components/IPs/IPsTopArea";
 import SearchLabels from "@components/IPs/SearchLabels";
 import { handleFormDelete } from "@components/Lib/Alerts";
 import MyTable from "@components/Lib/MyTable";
@@ -9,6 +8,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { useSnapshot } from "valtio";
 import state from "@app/store";
 import { useRouter } from "next/navigation";
+import TopArea from "@components/IPs/TopArea";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
@@ -80,8 +80,9 @@ export default function Show({ ip }) {
 
   return (
     <>
-      <IPsTopArea data={state.ips} path={'/add_ip'} title={'Add New IP'} />
+      <TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"} />
       <SearchLabels />
+
       <MyTable
         tableTitle={`Static IPs`}
         data={rs()}

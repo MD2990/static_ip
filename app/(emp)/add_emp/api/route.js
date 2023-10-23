@@ -1,5 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
 import EMP from "@models/ips/EMP";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -8,11 +9,11 @@ export async function POST(request) {
     await dbConnect();
 
     // Extract data from the JSON request
-    const { emp_name } = await request.json();
+    const { employee_name } = await request.json();
 
     // check if the ip already exists
 
-    const empExists = await EMP.findOne({  emp_name });
+    const empExists = await EMP.findOne({ employee_name });
 
     if (empExists)
       return NextResponse.json(
@@ -26,17 +27,19 @@ export async function POST(request) {
 
     // Attempt to save the data
     return await EMP.create({
-      emp_name,
-    }).then(() =>
-      NextResponse.json(
+      employee_name,
+    }).then(() => {
+      revalidateTag("emp_home");
+
+      return NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      )
-    );
+      );
+    });
 
     // Data was saved successfully
   } catch (error) {

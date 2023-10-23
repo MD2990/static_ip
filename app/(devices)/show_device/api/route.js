@@ -1,6 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
 import { convertDate } from "@lib/helpers";
-import EMP from "@models/ips/EMP";
+import DEVICES from "@models/ips/DEVICES";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -9,13 +9,13 @@ export async function GET() {
   try {
     await dbConnect();
 
-    let emp = await EMP.find({}).sort({ updatedAt: -1 });
+    let device = await DEVICES.find({}).sort({ updatedAt: -1 });
 
-    emp = convertDate(emp);
+    device = convertDate(device);
 
-    revalidateTag("emp_home");
+    revalidateTag("device_home");
 
-    return NextResponse.json(emp);
+    return NextResponse.json(device);
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
   }

@@ -3,25 +3,23 @@ import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
-import {
-  CustomDropdown,
-  CustomField,
-  CustomTextArea,
-  FormBottomButton,
-  Title,
-} from "@components/Lib/Fields";
+import { CustomField, FormBottomButton, Title } from "@components/Lib/Fields";
 import { Form, Formik } from "formik";
-import { empValidationSchema } from "@lib/yupValidationSchema";
-import { deviceTypeOptions } from "@components/Lib/const";
+import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
-export default function EditIp({ data }) {
-  const { location, device_type, added_by, _id, ip, added_date, notes } = data;
+export default function Edit({ data }) {
+  const { device_type, _id } = data;
   const router = useRouter();
 
   async function put(values) {
     try {
-      await handlePut({ values, _id }).then(() => {
+      await handlePut({
+        values,
+        _id,
+        api: "/edit_device/api",
+        field_name: values.device_type,
+      }).then(() => {
         router.refresh();
         setTimeout(() => {
           router.back();
@@ -34,7 +32,7 @@ export default function EditIp({ data }) {
   async function onDelete() {
     await handleFormDelete({
       handleDelete: () => {
-        handleDelete({ id: _id });
+        handleDelete({ api: `/edit_device/api?id=${_id}` });
         router.refresh();
         setTimeout(() => {
           router.back();
@@ -46,22 +44,16 @@ export default function EditIp({ data }) {
   return (
     <>
       <Center mt="3%">
-        <Title title={"Edit"} />
+        <Title title={"Edit Device Details"} />
       </Center>
       <Formik
         initialValues={{
-          location,
           device_type,
-          added_by,
-
-          ip,
-          added_date,
-          notes,
         }}
         onSubmit={async (values) => {
           await put(values);
         }}
-        validationSchema={empValidationSchema}
+        validationSchema={deviceValidationSchema}
       >
         {(props) => {
           return (
@@ -78,25 +70,11 @@ export default function EditIp({ data }) {
                   spacing={[2, 3, 4, 6]}
                   p={[1, 2, 3, 4]}
                 >
-                  <CustomField fieldName="ip" labelName="IP" />
                   <CustomField
-                    fieldName="location"
-                    labelName="Location/Office"
-                  />
-                  <CustomDropdown
                     fieldName="device_type"
                     labelName="Device Type"
-                    val={device_type}
-                    arr={deviceTypeOptions}
-                    keys={"b"}
-                  />
-                  <CustomField fieldName="added_by" labelName="Added By" />
-                  <CustomField fieldName="added_date" type="date" />
-
-                  <CustomTextArea fieldName="notes" labelName="Notes" />
-
+                  />{" "}
                   <Divider color="gray.100" />
-
                   <FormBottomButton
                     router={router}
                     props={props}

@@ -53,7 +53,7 @@ export async function PUT(request) {
     await dbConnect();
 
     // Extract data from the JSON request
-    const { _id, emp_name } = await request.json();
+    const { _id, employee_name } = await request.json();
     if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
       return NextResponse.json({ message: "id is required" }, { status: 404 });
     }
@@ -62,7 +62,7 @@ export async function PUT(request) {
 
     // Attempt to save the data
     return await EMP.findByIdAndUpdate(_id, {
-      emp_name,
+      employee_name,
     }).then(() => {
       revalidateTag("emp_home");
       revalidateTag("emp_id");

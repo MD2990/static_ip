@@ -3,6 +3,7 @@ import { proxy } from "valtio";
 const state = proxy({
   ips: [],
   emp: [],
+  device: [],
   searchTerm: "",
   searchResults: [],
   isDisabled: false,

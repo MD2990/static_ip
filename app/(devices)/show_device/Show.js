@@ -6,20 +6,22 @@ import state from "@app/store";
 import { Heading, SimpleGrid } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
 import TopArea from "@components/IPs/TopArea";
-import { Cards } from "@components/Lib/Cards";
+import { Cards } from "../../../components/Lib/Cards";
 
-export default function Show({ emp }) {
+export default function Show({ device }) {
   const snap = useSnapshot(state);
   useEffect(() => {
-    state.emp = emp;
+    state.device = device;
     state.searchTerm = "";
-    state.title = "Employees List";
+    state.title = "Device List";
     return () => {
       state.searchTerm = "";
-      state.emp = [];
+      state.device = [];
     };
-  }, [emp]);
+  }, [device]);
 
+
+  console.log(state.device);
   const rs = useCallback(() => {
     // eslint-disable-next-line valtio/state-snapshot-rule
     return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
@@ -29,11 +31,11 @@ export default function Show({ emp }) {
   const deleteFunc = useCallback(async (e) => {
     await handleFormDelete({
       handleDelete: () =>
-        handleDelete({ api: `/edit_emp/api?id=${e._id}` }).then(() => {
+        handleDelete({ api: `/edit_device/api?id=${e._id}` }).then(() => {
           state.searchResults = state.searchResults.filter(
             (p) => p._id !== e._id
           );
-          state.emp = state.emp.filter((p) => p._id !== e._id);
+          state.device = state.device.filter((p) => p._id !== e._id);
           state.searchTerm = "";
         }),
     });
@@ -41,9 +43,13 @@ export default function Show({ emp }) {
 
   return (
     <>
-      <TopArea data={snap.emp} path={"/add_emp"} title={"Add New Employee"} />
+      <TopArea
+        data={snap.device}
+        path={"/add_device"}
+        title={"Add New Device"}
+      />
 
-      {snap.emp.length === 0 ? (
+      {snap.device.length === 0 ? (
         <Heading
           size={["sm", "md", "lg", "2xl"]}
           align="center"
@@ -52,7 +58,7 @@ export default function Show({ emp }) {
           color={"gray.500"}
           fontFamily={'"Times New Roman", Times, serif'}
         >
-          No Employees Added Yet ...
+          No Device Added Yet ...
         </Heading>
       ) : (
         <SimpleGrid
@@ -62,8 +68,8 @@ export default function Show({ emp }) {
           <Cards
             data={rs()}
             deleteFunc={deleteFunc}
-            fieldName={"employee_name"}
-            editPath={"edit_emp"}
+            fieldName={"device_type"}
+            editPath={"edit_device"}
           />
         </SimpleGrid>
       )}

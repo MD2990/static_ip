@@ -14,7 +14,6 @@ async function getData() {
 }
 
 export default async function Main() {
-
   const ip = await getData();
-  return <Show ip={ip} />;
+  return <Show ip={ip} />
 }

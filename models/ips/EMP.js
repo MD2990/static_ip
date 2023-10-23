@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const MODEL_NAME = "EMPLOYEES";
 const schema = new Schema(
   {
-    emp_name: {
+    employee_name: {
       type: String,
       unique: true,
       uppercase: true,

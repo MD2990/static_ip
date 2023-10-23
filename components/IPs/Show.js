@@ -6,19 +6,21 @@ import { handleDelete } from "../../utils/dbConnect";
 import { handleFormDelete } from "../Lib/Alerts";
 import MyTable from "../Lib/MyTable";
 import Paginate from "../Lib/Paginate";
-import IPsTopArea from "./IPsTopArea";
 import SearchLabels from "./SearchLabels";
+import TopArea from "./TopArea";
 
 export default function Show({ ip }) {
   const snap = useSnapshot(state);
 
   useEffect(() => {
+    state.title = "Static IPs";
     state.ips = ip;
     state.searchTerm = "";
     return () => {
       state.searchTerm = "";
       state.isDisabled = false;
       state.ips = [];
+      state.title = "";
     };
   }, [ip]);
 
@@ -73,7 +75,7 @@ export default function Show({ ip }) {
 
   return (
     <>
-      <IPsTopArea />
+      <TopArea />
 
       <SearchLabels />
 

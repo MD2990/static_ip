@@ -1,5 +1,5 @@
 import { dbConnect } from "@app/dbConnect";
-import IPS from "@models/ips/IPS";
+import DEVICES from "@models/ips/DEVICES";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -9,41 +9,37 @@ export async function POST(request) {
     await dbConnect();
 
     // Extract data from the JSON request
-    let { ip, added_by, device_type, location, added_date } =
-      await request.json();
+    const { device_type } = await request.json();
 
     // check if the ip already exists
 
-    const ipExists = await IPS.findOne({ ip: ip });
+    const deviceExists = await DEVICES.findOne({ device_type });
 
-    if (ipExists)
+    if (deviceExists)
       return NextResponse.json(
         {
-          message: "IP Already Exists",
+          message: "Employee already exists",
         },
         {
           status: 409,
         }
       );
 
-    revalidateTag("home");
     // Attempt to save the data
-    return await IPS.create({
-      ip,
-      added_by,
+    return await DEVICES.create({
       device_type,
-      location,
-      added_date,
-    }).then(() =>
-      NextResponse.json(
+    }).then(() => {
+      revalidateTag("device_home");
+
+      return NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      )
-    );
+      );
+    });
 
     // Data was saved successfully
   } catch (error) {

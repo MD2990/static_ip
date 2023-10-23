@@ -5,30 +5,30 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@components/Lib/Fields";
-import { empValidationSchema } from "@lib/yupValidationSchema";
+import { deviceValidationSchema } from "@lib/yupValidationSchema";
 
 export default function Add() {
   const router = useRouter();
 
   async function add(values) {
-    await post({ values, api: "/add_emp/api", name: values.employee_name });
+    await post({ values, api: "/add_device/api", name: values.device_type });
     router.refresh();
   }
 
   return (
     <>
       <Center mt="0.5%">
-        <Title title={"Add Employee"} />
+        <Title title={"Add Device"} />
       </Center>
       <Formik
         initialValues={{
-          employee_name: "",
+          device_type: "",
         }}
         onSubmit={async (values, actions) => {
           await add(values);
           actions.resetForm();
         }}
-        validationSchema={empValidationSchema}
+        validationSchema={deviceValidationSchema}
       >
         {(props) => {
           return (
@@ -45,10 +45,7 @@ export default function Add() {
                   spacing={[2, 3, 4, 6]}
                   p={[1, 2, 3, 4]}
                 >
-                  <CustomField
-                    fieldName="employee_name"
-                    labelName="Employee Name"
-                  />
+                  <CustomField fieldName="device_type" labelName="Device Name" />
 
                   <Divider borderColor={"gray.100"} />
 

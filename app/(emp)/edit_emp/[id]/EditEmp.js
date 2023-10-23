@@ -9,7 +9,7 @@ import { empValidationSchema } from "@lib/yupValidationSchema";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
 export default function EditEmp({ data }) {
-  const { emp_name, _id } = data;
+  const { employee_name, _id } = data;
   const router = useRouter();
 
   async function put(values) {
@@ -18,7 +18,7 @@ export default function EditEmp({ data }) {
         values,
         _id,
         api: "/edit_emp/api",
-        field_name: values.emp_name,
+        field_name: values.employee_name,
       }).then(() => {
         router.refresh();
         setTimeout(() => {
@@ -48,7 +48,7 @@ export default function EditEmp({ data }) {
       </Center>
       <Formik
         initialValues={{
-          emp_name,
+          employee_name,
         }}
         onSubmit={async (values) => {
           await put(values);
@@ -70,7 +70,10 @@ export default function EditEmp({ data }) {
                   spacing={[2, 3, 4, 6]}
                   p={[1, 2, 3, 4]}
                 >
-                  <CustomField fieldName="emp_name" labelName="Employee Name" />{" "}
+                  <CustomField
+                    fieldName="employee_name"
+                    labelName="Employee Name"
+                  />{" "}
                   <Divider color="gray.100" />
                   <FormBottomButton
                     router={router}
