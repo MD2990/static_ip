@@ -1,7 +1,7 @@
 import { Providers } from "./providers";
 import "./globals.css";
 import React from "react";
-import { MyMiniIcon } from "@components/IPs/MyIcons";
+import { MyMiniIcon } from "@components/Lib/MyIcons";
 
 export default function RootLayout({ children }) {
   return (

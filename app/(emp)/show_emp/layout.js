@@ -6,14 +6,11 @@ async function getEmp() {
     next: { tags: ["emp_home"] },
   });
   const emp = await data.json();
-   return emp;
+  return emp;
 }
 
 export default async function layout() {
   const emp = await getEmp();
 
-  return (
-	<Show emp={emp} />
-   
-  );
+  return <Show emp={emp} />;
 }

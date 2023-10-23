@@ -14,6 +14,8 @@ export default function Menus({ title, children }) {
   return (
     <Menu>
       <MenuButton
+        size={["xs", "sm", "md"]}
+        colorScheme="twitter"
         as={Button}
         rightIcon={<IoChevronDownCircleOutline />}
         fontSize={["xs", "sm", "md"]}

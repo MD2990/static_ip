@@ -1,16 +1,14 @@
 import { Stat, StatLabel, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import React from "react";
-import SearchInput from "../Lib/SearchInput";
+import SearchInput from "./SearchInput";
 import { useSnapshot } from "valtio";
-import { TopBtn } from "../Lib/BTNs";
+import { TopBtn } from "./BTNs";
 import {
   FcBusinessman,
   FcHome,
   FcMultipleSmartphones,
   FcPlus,
-
   FcPrint,
-
   FcViewDetails,
 } from "react-icons/fc";
 import state from "@app/store";
@@ -24,10 +22,9 @@ export default function TopArea({ data, path, title }) {
 
   const router = useRouter();
 
-
   return (
     <Wrap
-      justify={"space-around"}
+      justify={"center"}
       direction={"row"}
       boxShadow={"lg"}
       p={["1", "2", "3", "4"]}
@@ -45,9 +42,13 @@ export default function TopArea({ data, path, title }) {
           />
         </WrapItem>
       )}
-       {snap.searchResults.length ? (
+      {snap.searchResults.length ? (
         <WrapItem>
-          <TopBtn title="Print" onClick={()=>printPdf()} Icons={<FcPrint />} />
+          <TopBtn
+            title="Print"
+            onClick={() => printPdf()}
+            Icons={<FcPrint />}
+          />
         </WrapItem>
       ) : null}
       <WrapItem>
@@ -60,14 +61,21 @@ export default function TopArea({ data, path, title }) {
           Icons={<FcPlus />}
         />
       </WrapItem>
+
       <Menus title="Employees">
         <MenuItems text="Add" path="/add_emp" Icons={FcBusinessman} />
         <MenuItems text="Show" path="/show_emp" Icons={FcViewDetails} />
       </Menus>
+
       <Menus title="Devices">
-        <MenuItems text="Add" path="/device" Icons={FcMultipleSmartphones} />
+        <MenuItems
+          text="Add"
+          path="/add_device"
+          Icons={FcMultipleSmartphones}
+        />
         <MenuItems text="Show" path="/show_device" Icons={FcViewDetails} />
       </Menus>
+
       <WrapItem align="center" userSelect={"none"}>
         <Stat>
           <StatLabel

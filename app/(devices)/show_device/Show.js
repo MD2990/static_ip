@@ -5,23 +5,23 @@ import React, { useCallback, useEffect } from "react";
 import state from "@app/store";
 import { Heading, SimpleGrid } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
-import TopArea from "@components/IPs/TopArea";
+import TopArea from "@components/Lib/TopArea";
 import { Cards } from "../../../components/Lib/Cards";
+import PageTitle from "@components/Lib/PageTitle";
 
 export default function Show({ device }) {
   const snap = useSnapshot(state);
   useEffect(() => {
+    state.title = "Device List";
     state.device = device;
     state.searchTerm = "";
-    state.title = "Device List";
     return () => {
       state.searchTerm = "";
       state.device = [];
+      state.title = "";
     };
   }, [device]);
 
-
-  console.log(state.device);
   const rs = useCallback(() => {
     // eslint-disable-next-line valtio/state-snapshot-rule
     return snap.searchResults.slice(snap.offset, snap.offset + snap.PER_PAGE);
@@ -48,7 +48,7 @@ export default function Show({ device }) {
         path={"/add_device"}
         title={"Add New Device"}
       />
-
+      <PageTitle />
       {snap.device.length === 0 ? (
         <Heading
           size={["sm", "md", "lg", "2xl"]}

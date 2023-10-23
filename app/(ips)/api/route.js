@@ -34,7 +34,22 @@ export async function GET() {
     // convert createdAt to a normal date format (not a timestamp)
     ip = convertDate(ip);
 
-    return NextResponse.json(ip);
+
+    // get unique device types from the database using aggregation and count the number of each device type
+
+    const devices = await IPS.aggregate([
+      {
+        $group: {
+          _id: "$device_type",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    
+
+
+
+    return NextResponse.json({ip,devices});
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
   }

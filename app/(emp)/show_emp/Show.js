@@ -5,18 +5,20 @@ import React, { useCallback, useEffect } from "react";
 import state from "@app/store";
 import { Heading, SimpleGrid } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
-import TopArea from "@components/IPs/TopArea";
+import TopArea from "@components/Lib/TopArea";
 import { Cards } from "@components/Lib/Cards";
+import PageTitle from "@components/Lib/PageTitle";
 
 export default function Show({ emp }) {
   const snap = useSnapshot(state);
   useEffect(() => {
+    state.title = "Employees List";
     state.emp = emp;
     state.searchTerm = "";
-    state.title = "Employees List";
     return () => {
       state.searchTerm = "";
       state.emp = [];
+      state.title = "";
     };
   }, [emp]);
 
@@ -42,6 +44,7 @@ export default function Show({ emp }) {
   return (
     <>
       <TopArea data={snap.emp} path={"/add_emp"} title={"Add New Employee"} />
+      <PageTitle />
 
       {snap.emp.length === 0 ? (
         <Heading

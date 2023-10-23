@@ -22,16 +22,7 @@ export default function printPdf() {
     return { title: key.toUpperCase(), key: key };
   });
 
-  /*     return toPDF({
-      rows,
-      columns,
-      style: "l",
-      title: snap.searchTerm.trim()
-        ? `\t\t\t\t\t\t IPs related to:  ${substring(snap.searchTerm, 20)} `
-        : "\t\t\t\t\t\t  List of All Static IPs",
-      leftTitle: `Total IPs: ${snap.searchResults.length}`,
-    }); */
-
+ 
   // return dynamic pdf
   return toPDF({
     rows,

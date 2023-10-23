@@ -6,12 +6,11 @@ import {
   Text,
   WrapItem,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import { useSnapshot } from "valtio";
 import state from "../../app/store";
-function SearchLabels() {
+function SearchLabels({ devices }) {
   const snap = useSnapshot(state);
-  useEffect(() => {}, []);
 
   // create an array of multiple colors
   const colors = [
@@ -24,12 +23,7 @@ function SearchLabels() {
     "teal.200",
     "gray.200",
   ];
-  const unique = useCallback(
-    () =>
-      // eslint-disable-next-line no-undef
-      [...new Set(state.emp.map((item) => item.device_type))],
-    []
-  );
+
 
   const labelColors = (colors, i, n) => {
     const color = `${colors[i % colors.length].substring(
@@ -60,7 +54,8 @@ function SearchLabels() {
       >
         Filter by
       </Text>
-      {unique().map((e, i) => {
+
+      {devices.map((e, i) => {
         return (
           <WrapItem
             key={i}
@@ -80,10 +75,10 @@ function SearchLabels() {
                 rounded={"md"}
                 onClick={() => {
                   state.isDisabled = true;
-                  state.searchTerm = e;
+                  state.searchTerm = e._id;
                 }}
               >
-                {e}{" "}
+                {e._id} : {e.count}
                 <Text
                   textAlign={"center"}
                   color={labelColors(colors, i, 400)}
@@ -91,12 +86,7 @@ function SearchLabels() {
                   fontWeight="black"
                   textShadow="0px 0px 6px white"
                 >
-                  {Math.round(
-                    (state.emp.filter((item) => item.device_type === e).length /
-                      state.emp.length) *
-                      100
-                  )}
-                  %
+                  {Math.round((e.count / state.ips.length) * 100)}%
                 </Text>
               </StatLabel>
             </Stat>
@@ -110,7 +100,6 @@ function SearchLabels() {
           fontSize={["sm", "md", "lg", "xl"]}
           color="red.600"
           onClick={() => {
-            //state.searchResults = state.ips;
             state.searchTerm = "";
             state.isDisabled = false;
           }}

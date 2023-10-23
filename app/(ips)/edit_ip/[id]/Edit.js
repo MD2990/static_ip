@@ -1,34 +1,50 @@
+"use client";
+import { handleDelete, handlePut } from "@utils/dbConnect";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { Form, Formik } from "formik";
-import { handleDelete, handlePut } from "../../utils/dbConnect";
-import { useRouter } from "next/router";
-import { Divider, Wrap, Center } from "@chakra-ui/react";
-import { empValidationSchema } from "../../lib/yupValidationSchema";
+import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
   CustomDropdown,
   CustomField,
   CustomTextArea,
   FormBottomButton,
   Title,
-} from "../Lib/Fields";
-import { handleFormDelete } from "../Lib/Alerts";
-import { deviceTypeOptions } from "../Lib/const";
+} from "@components/Lib/Fields";
+import { Form, Formik } from "formik";
+import { ipValidationSchema } from "@lib/yupValidationSchema";
+import { deviceTypeOptions } from "@components/Lib/const";
+import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
 
-export default function EditIps({ ips }) {
-  const { location, device_type, added_by, _id, ip, added_date, notes } = ips;
-
+export default function Edit({ data }) {
+  const { location, device_type, added_by, _id, ip, notes } = data;
   const router = useRouter();
 
   async function put(values) {
-    await handlePut({ values, api: "ips", router });
+    try {
+      await handlePut({
+        values,
+        _id,
+        api: "/edit_ip/api",
+        field_name: values.ip,
+      }).then(() => {
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      });
+    } catch (error) {
+      errorAlert(error.message);
+    }
   }
   async function onDelete() {
     await handleFormDelete({
-      handleDelete: () => handleDelete(
-    { api: `/edit_ip/api?id=${_id}`
-    
-    }),
-      router: router,
+      handleDelete: () => {
+        handleDelete({ id: _id });
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 500);
+      },
     });
   }
 
@@ -42,17 +58,13 @@ export default function EditIps({ ips }) {
           location,
           device_type,
           added_by,
-
           ip,
-          added_date,
           notes,
         }}
-        onSubmit={async (values, actions) => {
-          actions.setSubmitting(false);
+        onSubmit={async (values) => {
           await put(values);
-          router.back();
         }}
-        validationSchema={empValidationSchema}
+        validationSchema={ipValidationSchema}
       >
         {(props) => {
           return (
