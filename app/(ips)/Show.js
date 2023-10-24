@@ -9,12 +9,21 @@ import { useSnapshot } from "valtio";
 import state from "@app/store";
 import { useRouter } from "next/navigation";
 import TopArea from "@components/Lib/TopArea";
+import { setLocalStorage } from "@lib/helpers";
 
-export default function Show({ ip,devices }) {
+export default function Show({ ip, devices, empTotal, devicesTotal }) {
   const snap = useSnapshot(state);
   const router = useRouter();
 
+
   useEffect(() => {
+
+
+        if (typeof window !== "undefined") {
+       
+          setLocalStorage({ key: "empTotal", obj: empTotal });
+          setLocalStorage({ key: "devicesTotal", obj: devicesTotal });
+        }
     state.ips = ip;
     state.searchTerm = "";
     return () => {
@@ -22,7 +31,7 @@ export default function Show({ ip,devices }) {
       state.isDisabled = false;
       state.ips = [];
     };
-  }, [ip]);
+  }, [devicesTotal, empTotal, ip]);
 
   const rs = useCallback(() => {
     // eslint-disable-next-line valtio/state-snapshot-rule
@@ -80,7 +89,8 @@ export default function Show({ ip,devices }) {
 
   return (
     <>
-      <TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"} />
+      <TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"}>
+      </TopArea>
       <SearchLabels devices={devices} />
 
       <MyTable

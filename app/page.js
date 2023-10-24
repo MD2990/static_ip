@@ -6,15 +6,22 @@ async function getData() {
     const data = await fetch(`${process.env.NEXT_PUBLIC_IP}/api`, {
       next: { tags: ["home"] },
     });
-    const {ip, devices} = (await data?.json()) || [];
+    const { ip, devices, empTotal, devicesTotal } = (await data?.json()) || [];
 
-    return { ip, devices}
+    return { ip, devices, empTotal, devicesTotal };
   } catch (error) {
     return error.message;
   }
 }
 
 export default async function page() {
-  const {ip, devices} = await getData();
-  return <Show ip={ip} devices={devices} />;
+  const { ip, devices, empTotal, devicesTotal } = await getData();
+  return (
+    <Show
+      ip={ip}
+      devices={devices}
+      empTotal={empTotal}
+      devicesTotal={devicesTotal}
+    />
+  );
 }

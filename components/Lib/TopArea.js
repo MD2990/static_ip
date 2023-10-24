@@ -1,5 +1,5 @@
 import { Stat, StatLabel, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import React from "react";
+import React, {  useEffect } from "react";
 import SearchInput from "./SearchInput";
 import { useSnapshot } from "valtio";
 import { TopBtn } from "./BTNs";
@@ -13,13 +13,23 @@ import {
 } from "react-icons/fc";
 import state from "@app/store";
 import { usePathname, useRouter } from "next/navigation";
-import Menus, { MenuItems } from "./Menus";
 import printPdf from "@components/Lib/print";
+import Menus, { MenuItems } from "./Menus";
+import { getLocalStorage } from "@lib/helpers";
 
 export default function TopArea({ data, path, title }) {
+
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      state.empTotal = getLocalStorage("empTotal");
+      state.devicesTotal = getLocalStorage("devicesTotal");
+    }
+
+  }, []);
+
   const snap = useSnapshot(state);
   const pathname = usePathname();
-
   const router = useRouter();
 
   return (
@@ -62,12 +72,12 @@ export default function TopArea({ data, path, title }) {
         />
       </WrapItem>
 
-      <Menus title="Employees">
+      <Menus title="Employees" total={state.empTotal}>
         <MenuItems text="Add" path="/add_emp" Icons={FcBusinessman} />
         <MenuItems text="Show" path="/show_emp" Icons={FcViewDetails} />
       </Menus>
 
-      <Menus title="Devices">
+      <Menus title="Devices" total={state.devicesTotal }>
         <MenuItems
           text="Add"
           path="/add_device"

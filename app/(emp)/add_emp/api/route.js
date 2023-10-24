@@ -30,6 +30,7 @@ export async function POST(request) {
       employee_name,
     }).then(() => {
       revalidateTag("emp_home");
+      revalidateTag("get_lists");
 
       return NextResponse.json(
         {

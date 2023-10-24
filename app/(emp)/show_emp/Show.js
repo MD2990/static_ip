@@ -8,13 +8,22 @@ import { useSnapshot } from "valtio";
 import TopArea from "@components/Lib/TopArea";
 import { Cards } from "@components/Lib/Cards";
 import PageTitle from "@components/Lib/PageTitle";
+import { setLocalStorage } from "@lib/helpers";
+import { useRouter } from "next/navigation";
 
 export default function Show({ emp }) {
   const snap = useSnapshot(state);
+
+  const router = useRouter();
+
   useEffect(() => {
     state.title = "Employees List";
     state.emp = emp;
     state.searchTerm = "";
+    if (typeof window !== "undefined") {
+      setLocalStorage({ key: "empTotal", obj: emp.length });
+    }
+
     return () => {
       state.searchTerm = "";
       state.emp = [];
@@ -37,9 +46,12 @@ export default function Show({ emp }) {
           );
           state.emp = state.emp.filter((p) => p._id !== e._id);
           state.searchTerm = "";
+          router.refresh();
+          state.empTotal = state.emp.length;
+             
         }),
     });
-  }, []);
+  }, [router]);
 
   return (
     <>

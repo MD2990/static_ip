@@ -17,7 +17,7 @@ export async function GET(request) {
     const ip = await IPS.findById(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-
+    revalidateTag("get_lists");
     return NextResponse.json(ip);
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
@@ -69,7 +69,7 @@ export async function PUT(request) {
       added_date,
     }).then(() => {
       revalidateTag("home");
-      revalidateTag("id");
+      revalidateTag("edit_ip");
       return NextResponse.json(
         {
           message: "Added Successfully",

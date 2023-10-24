@@ -1,5 +1,7 @@
 import { dbConnect } from "@app/dbConnect";
 import { convertDate } from "@lib/helpers";
+import DEVICES from "@models/ips/DEVICES";
+import EMP from "@models/ips/EMP";
 import IPS from "@models/ips/IPS";
 import mongoose from "mongoose";
 import { revalidateTag } from "next/cache";
@@ -31,6 +33,11 @@ export async function GET() {
 
     let ip = await IPS.find({}).sort({ updatedAt: -1 });
 
+    // get devices number from Devices collection
+    const devicesTotal = await DEVICES.find({}).countDocuments();
+    const empTotal = await EMP.find({}).countDocuments();
+
+
     // convert createdAt to a normal date format (not a timestamp)
     ip = convertDate(ip);
 
@@ -47,9 +54,9 @@ export async function GET() {
     ]);
     
 
+revalidateTag("home");
 
-
-    return NextResponse.json({ip,devices});
+    return NextResponse.json({ ip, devices, empTotal, devicesTotal });
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
   }

@@ -10,7 +10,7 @@ import {
 import { IoChevronDownCircleOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
-export default function Menus({ title, children }) {
+export default function Menus({ title, children, total }) {
   return (
     <Menu>
       <MenuButton
@@ -20,7 +20,19 @@ export default function Menus({ title, children }) {
         rightIcon={<IoChevronDownCircleOutline />}
         fontSize={["xs", "sm", "md"]}
       >
-        {title}
+        {title}{" "}
+        <Text
+          as="span"
+          p="2"
+          m="1"
+          color="blue.50"
+          axis="both"
+          rounded={"sm"}
+          fontFamily={"monospace"}
+          fontSize={["xs", "sm", "md"]}
+        >
+          {total || 0}
+        </Text>
       </MenuButton>
       <MenuList>{children}</MenuList>
     </Menu>

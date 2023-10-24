@@ -39,6 +39,8 @@ export async function DELETE(request) {
       return NextResponse.json({ error: err.message, status: 500 });
     });
     revalidateTag("emp_home");
+    revalidateTag("home");
+    revalidateTag("get_lists");
 
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
@@ -66,6 +68,8 @@ export async function PUT(request) {
     }).then(() => {
       revalidateTag("emp_home");
       revalidateTag("emp_id");
+      revalidateTag("get_lists");
+
       return NextResponse.json(
         {
           message: "Added Successfully",

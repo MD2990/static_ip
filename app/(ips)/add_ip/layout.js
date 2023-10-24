@@ -1,6 +1,23 @@
 import Add from "@app/(ips)/add_ip/Add";
 import React from "react";
 
-export default function Layout() {
-  return <Add />;
+
+  export async function getList() {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_IP}/add_ip/api`,
+
+      {
+        next: { tags: ["get_lists"] },
+      }
+    );
+    const { devices ,emp} = await res.json();
+    return { devices,emp };
+  }
+
+export default async function Layout() {
+
+  const { devices,emp } = await getList();
+
+
+  return <Add emp={emp} devices={devices}  />;
 }

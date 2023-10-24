@@ -8,13 +8,22 @@ import { useSnapshot } from "valtio";
 import TopArea from "@components/Lib/TopArea";
 import { Cards } from "../../../components/Lib/Cards";
 import PageTitle from "@components/Lib/PageTitle";
+import { setLocalStorage } from "@lib/helpers";
+import { useRouter } from "next/navigation";
 
 export default function Show({ device }) {
   const snap = useSnapshot(state);
+
+  const router = useRouter();
+
   useEffect(() => {
     state.title = "Device List";
     state.device = device;
     state.searchTerm = "";
+
+    if (typeof window !== "undefined") {
+      setLocalStorage({ key: "devicesTotal", obj: device.length });
+    }
     return () => {
       state.searchTerm = "";
       state.device = [];
@@ -37,9 +46,11 @@ export default function Show({ device }) {
           );
           state.device = state.device.filter((p) => p._id !== e._id);
           state.searchTerm = "";
+          router.refresh();
+          state.devicesTotal = state.device.length;
         }),
     });
-  }, []);
+  }, [router]);
 
   return (
     <>
@@ -48,6 +59,7 @@ export default function Show({ device }) {
         path={"/add_device"}
         title={"Add New Device"}
       />
+
       <PageTitle />
       {snap.device.length === 0 ? (
         <Heading
@@ -62,6 +74,8 @@ export default function Show({ device }) {
         </Heading>
       ) : (
         <SimpleGrid
+          m="2"
+          p="2"
           spacing={1}
           templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
         >

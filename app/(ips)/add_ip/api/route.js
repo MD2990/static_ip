@@ -1,4 +1,6 @@
 import { dbConnect } from "@app/dbConnect";
+import DEVICES from "@models/ips/DEVICES";
+import EMP from "@models/ips/EMP";
 import IPS from "@models/ips/IPS";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
@@ -52,5 +54,25 @@ export async function POST(request) {
       { message: "Internal Server Error" },
       { status: 500 }
     );
+  }
+}
+
+export async function GET() {
+  try {
+    await dbConnect();
+
+    // get devices with only device_type
+    
+    const devices = await DEVICES.find({})
+      .select("device_type -_id")
+      .sort({ updatedAt: -1 });
+
+    const emp = await EMP.find({})
+      .select("employee_name -_id")
+      .sort({ updatedAt: -1 });
+
+    return NextResponse.json({ devices, emp });
+  } catch (error) {
+    return NextResponse.json({ error: error.message, status: 500 });
   }
 }

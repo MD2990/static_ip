@@ -1,6 +1,16 @@
 import React from "react";
 import Add from "./Add";
 
-export default function Layout() {
-  return <Add />;
+// get data
+async function getData() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_IP}/add_device/api`, {
+    next: { tags: ["unq_device"] },
+  });
+  const data = await res.json();
+  return data;
+}
+
+export default async function Layout() {
+  const data = await getData();
+  return <Add data={data} />;
 }

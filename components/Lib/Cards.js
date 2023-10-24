@@ -30,7 +30,7 @@ export function Cards({ data, deleteFunc, fieldName, editPath }) {
           textAlign={"center"}
         >
           <CardHeader color={"gray.700"} textShadow={"1px 1px 2px lightGray"}>
-            <Heading size={["xs", "sm", "md"]} noOfLines={1}>
+            <Heading size={["xs", "sm", "md"]} noOfLines={3}>
               {" "}
               {e[fieldName]}
             </Heading>

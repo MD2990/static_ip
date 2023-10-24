@@ -13,6 +13,10 @@ const state = proxy({
   title: "",
   isDeleted: false,
   sortKey: null,
+  empTotal: 0,
+  devicesTotal: 0,
+  deviceDefaultValue: "",
+
 });
 
 export default state;

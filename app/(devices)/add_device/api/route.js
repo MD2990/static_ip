@@ -30,6 +30,8 @@ export async function POST(request) {
       device_type,
     }).then(() => {
       revalidateTag("device_home");
+      revalidateTag("unq_device");
+      revalidateTag("get_lists");
 
       return NextResponse.json(
         {
@@ -48,5 +50,17 @@ export async function POST(request) {
       { message: "Internal Server Error" },
       { status: 500 }
     );
+  }
+}
+export async function GET() {
+  try {
+    await dbConnect();
+
+    // get only unique device types
+    const device = await DEVICES.find({}).distinct("device_type");
+
+    return NextResponse.json(device);
+  } catch (error) {
+    return NextResponse.json({ error: error.message, status: 500 });
   }
 }

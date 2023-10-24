@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
-  CustomDropdown,
+
   CustomField,
   CustomTextArea,
   FormBottomButton,
@@ -12,10 +12,10 @@ import {
 } from "@components/Lib/Fields";
 import { Form, Formik } from "formik";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
-import { deviceTypeOptions } from "@components/Lib/const";
 import { errorAlert, handleFormDelete } from "@components/Lib/Alerts";
+import DropdownLists from "@app/(ips)/add_ip/DropdownLists";
 
-export default function Edit({ data }) {
+export default function Edit({ data, devices, emp }) {
   const { location, device_type, added_by, _id, ip, notes } = data;
   const router = useRouter();
 
@@ -86,14 +86,9 @@ export default function Edit({ data }) {
                     fieldName="location"
                     labelName="Location/Office"
                   />
-                  <CustomDropdown
-                    fieldName="device_type"
-                    labelName="Device Type"
-                    val={device_type}
-                    arr={deviceTypeOptions}
-                    keys={"b"}
-                  />
-                  <CustomField fieldName="added_by" labelName="Added By" />
+
+                  <DropdownLists emp={emp} devices={devices} />
+
 
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 

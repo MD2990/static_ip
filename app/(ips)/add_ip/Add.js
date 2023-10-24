@@ -6,15 +6,14 @@ import { useRouter } from "next/navigation";
 import { Divider, Wrap, Center } from "@chakra-ui/react";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import {
-  CustomDropdown,
   CustomField,
   CustomTextArea,
   FormBottomButton,
   Title,
 } from "@components/Lib/Fields";
-import { deviceTypeOptions } from "@components/Lib/const";
+import DropdownLists from "./DropdownLists";
 
-export default function Add() {
+export default function Add({ emp, devices }) {
   const router = useRouter();
 
   async function add(values) {
@@ -62,14 +61,7 @@ export default function Add() {
                     labelName="Location/Office"
                   />
 
-                  <CustomDropdown
-                    fieldName="device_type"
-                    labelName="Device Type"
-                    arr={deviceTypeOptions}
-                    keys={"b"}
-                  />
-                  <CustomField fieldName="added_by" labelName="Added By" />
-
+                  <DropdownLists devices={devices} emp={emp} />
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 
                   <Divider color="gray.100" />

@@ -1,14 +1,14 @@
+import state from "@app/store";
 import {
   Button,
-  Stack,
+  Wrap,
+  WrapItem,
   Stat,
   StatLabel,
   Text,
-  WrapItem,
 } from "@chakra-ui/react";
 import React from "react";
 import { useSnapshot } from "valtio";
-import state from "../../app/store";
 function SearchLabels({ devices }) {
   const snap = useSnapshot(state);
 
@@ -24,7 +24,6 @@ function SearchLabels({ devices }) {
     "gray.200",
   ];
 
-
   const labelColors = (colors, i, n) => {
     const color = `${colors[i % colors.length].substring(
       0,
@@ -33,28 +32,9 @@ function SearchLabels({ devices }) {
     return color;
   };
 
-  if (!snap.searchResults.length) return null;
-
+  if (snap.ips.length === 0) return null;
   return (
-    <Stack
-      ml="2%"
-      position={"fixed"}
-      left={"0"}
-      top={["10rem", "22rem"]}
-      bottom={"0"}
-    >
-      <Text
-        userSelect={"none"}
-        whiteSpace={"nowrap"}
-        fontFamily={"serif"}
-        fontSize={["sm", "md", "lg"]}
-        fontWeight={"bold"}
-        color={"blackAlpha.500"}
-        textShadow={"0px 3px 2px lightGray"}
-      >
-        Filter by
-      </Text>
-
+    <Wrap p="2" m="2">
       {devices.map((e, i) => {
         return (
           <WrapItem
@@ -68,11 +48,12 @@ function SearchLabels({ devices }) {
           >
             <Stat>
               <StatLabel
+                fontSize={["xs", "sm"]}
                 textAlign={"center"}
                 bg={colors[i % colors.length]}
-                p={`${1.5}`}
+                p="1"
                 color={labelColors(colors, i, 600)}
-                rounded={"md"}
+                rounded={"sm"}
                 onClick={() => {
                   state.isDisabled = true;
                   state.searchTerm = e._id;
@@ -82,11 +63,11 @@ function SearchLabels({ devices }) {
                 <Text
                   textAlign={"center"}
                   color={labelColors(colors, i, 400)}
-                  fontSize={[8, 10]}
-                  fontWeight="black"
-                  textShadow="0px 0px 6px white"
+                  fontSize={[8, 10, 12]}
+                  fontWeight="bold"
+                  textShadow="0px 1px 0px white"
                 >
-                  {Math.round((e.count / state.ips.length) * 100)}%
+                  {`${Math.round((e.count / state.ips.length) * 100)} %`}
                 </Text>
               </StatLabel>
             </Stat>
@@ -107,7 +88,7 @@ function SearchLabels({ devices }) {
           ☓
         </Button>
       )}
-    </Stack>
+    </Wrap>
   );
 }
 
