@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Wrap, Center, Divider } from "@chakra-ui/react";
 import {
-
   CustomField,
   CustomTextArea,
   FormBottomButton,
@@ -27,7 +26,6 @@ export default function Edit({ data, devices, emp }) {
         api: "/edit_ip/api",
         field_name: values.ip,
       }).then(() => {
-        router.refresh();
         setTimeout(() => {
           router.back();
         }, 500);
@@ -40,7 +38,7 @@ export default function Edit({ data, devices, emp }) {
     await handleFormDelete({
       handleDelete: () => {
         handleDelete({ id: _id });
-        router.refresh();
+
         setTimeout(() => {
           router.back();
         }, 500);
@@ -88,7 +86,6 @@ export default function Edit({ data, devices, emp }) {
                   />
 
                   <DropdownLists emp={emp} devices={devices} />
-
 
                   <CustomTextArea fieldName="notes" labelName="Notes" />
 

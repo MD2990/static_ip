@@ -1,7 +1,5 @@
 import { dbConnect } from "@app/dbConnect";
 import DEVICES from "@models/ips/DEVICES";
-
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
@@ -38,10 +36,6 @@ export async function DELETE(request) {
     await DEVICES.findByIdAndDelete(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-    revalidateTag("device_home");
-    revalidateTag("home");
-    revalidateTag("unq_device");
-    revalidateTag("get_lists");
 
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
@@ -66,21 +60,16 @@ export async function PUT(request) {
     // Attempt to save the data
     return await DEVICES.findByIdAndUpdate(_id, {
       device_type,
-    }).then(() => {
-      revalidateTag("device_home");
-      revalidateTag("device_id");
-      revalidateTag("unq_device");
-      revalidateTag("get_lists");
-
-      return NextResponse.json(
+    }).then(() =>
+      NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      );
-    });
+      )
+    );
 
     // Data was saved successfully
   } catch (error) {

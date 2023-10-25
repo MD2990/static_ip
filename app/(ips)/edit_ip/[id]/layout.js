@@ -5,10 +5,7 @@ import { getList } from "@app/(ips)/add_ip/layout";
 async function getData(id) {
   // use fetch to get data from an API
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_IP}/edit_ip/api?id=${id}`,
-    {
-      next: { tags: ["edit_ip"] },
-    }
+    `${process.env.NEXT_PUBLIC_IP}/edit_ip/api?id=${id}`
   );
   const data = await res.json();
   return data;

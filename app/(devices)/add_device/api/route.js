@@ -1,6 +1,5 @@
 import { dbConnect } from "@app/dbConnect";
 import DEVICES from "@models/ips/DEVICES";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -28,20 +27,16 @@ export async function POST(request) {
     // Attempt to save the data
     return await DEVICES.create({
       device_type,
-    }).then(() => {
-      revalidateTag("device_home");
-      revalidateTag("unq_device");
-      revalidateTag("get_lists");
-
-      return NextResponse.json(
+    }).then(() =>
+      NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      );
-    });
+      )
+    );
 
     // Data was saved successfully
   } catch (error) {

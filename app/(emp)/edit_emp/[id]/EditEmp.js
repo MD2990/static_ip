@@ -20,7 +20,6 @@ export default function EditEmp({ data }) {
         api: "/edit_emp/api",
         field_name: values.employee_name,
       }).then(() => {
-        router.refresh();
         setTimeout(() => {
           router.back();
         }, 500);
@@ -33,8 +32,9 @@ export default function EditEmp({ data }) {
     await handleFormDelete({
       handleDelete: () => {
         handleDelete({ api: `/edit_emp/api?id=${_id}` });
-        router.refresh();
+
         setTimeout(() => {
+          router.refresh();
           router.back();
         }, 500);
       },
@@ -52,6 +52,7 @@ export default function EditEmp({ data }) {
         }}
         onSubmit={async (values) => {
           await put(values);
+          router.refresh();
         }}
         validationSchema={empValidationSchema}
       >

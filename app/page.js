@@ -3,9 +3,7 @@ import Show from "./(ips)/Show";
 
 async function getData() {
   try {
-    const data = await fetch(`${process.env.NEXT_PUBLIC_IP}/api`, {
-      next: { tags: ["home"] },
-    });
+    const data = await fetch(`${process.env.NEXT_PUBLIC_IP}/api`);
     const { ip, devices, empTotal, devicesTotal } = (await data?.json()) || [];
 
     return { ip, devices, empTotal, devicesTotal };
@@ -13,8 +11,9 @@ async function getData() {
     return error.message;
   }
 }
+export const dynamic = "force-dynamic";
 
-export default async function page() {
+export default async function Page() {
   const { ip, devices, empTotal, devicesTotal } = await getData();
   return (
     <Show

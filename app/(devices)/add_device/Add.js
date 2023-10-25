@@ -3,12 +3,7 @@ import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
-import {
-  Wrap,
-  Center,
-  Divider,
-  Button,
-} from "@chakra-ui/react";
+import { Wrap, Center, Divider, Button } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@components/Lib/Fields";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import state from "@app/store";
@@ -21,7 +16,6 @@ export default function Add({ data }) {
 
   async function add(values) {
     await post({ values, api: "/add_device/api", name: values.device_type });
-    router.refresh();
   }
 
   useEffect(() => {
@@ -43,9 +37,11 @@ export default function Add({ data }) {
     "Other",
   ];
 
-  const filteredDevices = devicesArray.filter((device) =>
-    data.map((item) => item.toLowerCase()).includes(device.toLowerCase())
-  );
+  const filteredDevices = (device) =>
+    // return false if device is not in devices array
+    // return true if device is in devices array
+    data.some((d) => d.toLowerCase() === device.toLowerCase());
+
   return (
     <>
       <Center mt="15%">
@@ -63,7 +59,7 @@ export default function Add({ data }) {
         >
           {devicesArray.map((device, i) => (
             <Button
-              isDisabled={filteredDevices.includes(device)}
+              isDisabled={filteredDevices(device)}
               size={"sm"}
               key={i}
               variant="solid"
@@ -84,9 +80,9 @@ export default function Add({ data }) {
         enableReinitialize={true}
         onSubmit={async (values, actions) => {
           await add(values);
-          router.refresh();
           state.deviceDefaultValue = "";
           actions.resetForm();
+          router.refresh();
         }}
         validationSchema={deviceValidationSchema}
       >

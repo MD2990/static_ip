@@ -75,11 +75,12 @@ function SearchLabels({ devices }) {
         );
       })}
 
-      {snap.isDisabled && (
+      {(snap.isDisabled && snap.searchTerm.length>0 ) && (
         <Button
-          variant={"outline"}
+          colorScheme="gray"
           fontSize={["sm", "md", "lg", "xl"]}
-          color="red.600"
+          color="red.500"
+          h="auto"
           onClick={() => {
             state.searchTerm = "";
             state.isDisabled = false;

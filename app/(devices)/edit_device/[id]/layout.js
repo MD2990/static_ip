@@ -4,10 +4,7 @@ import Edit from "./Edit";
 async function getData(id) {
   // use fetch to get data from an API
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_IP}/edit_device/api?id=${id}`,
-    {
-      next: { tags: ["device_id"] },
-    }
+    `${process.env.NEXT_PUBLIC_IP}/edit_device/api?id=${id}`
   );
   const data = await res.json();
   return data;

@@ -15,21 +15,19 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
   const snap = useSnapshot(state);
   const router = useRouter();
 
-
   useEffect(() => {
-
-
-        if (typeof window !== "undefined") {
-       
-          setLocalStorage({ key: "empTotal", obj: empTotal });
-          setLocalStorage({ key: "devicesTotal", obj: devicesTotal });
-        }
+    if (typeof window !== "undefined") {
+      setLocalStorage({ key: "empTotal", obj: empTotal });
+      setLocalStorage({ key: "devicesTotal", obj: devicesTotal });
+    }
     state.ips = ip;
     state.searchTerm = "";
+    state.title = "Static IPs";
     return () => {
       state.searchTerm = "";
       state.isDisabled = false;
       state.ips = [];
+      state.title = "";
     };
   }, [devicesTotal, empTotal, ip]);
 
@@ -79,8 +77,9 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
           handleDelete({ api: `/api?id=${e._id}` }).then(() => {
             // filter out the deleted item
             state.ips = state.ips.filter((item) => item._id !== e._id);
-            router.refresh();
+
             state.searchTerm = "";
+            router.refresh();
           }),
       });
     },
@@ -89,8 +88,7 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 
   return (
     <>
-      <TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"}>
-      </TopArea>
+      <TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"}></TopArea>
       <SearchLabels devices={devices} />
 
       <MyTable

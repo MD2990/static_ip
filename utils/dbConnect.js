@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import jsPDF from "jspdf";
-const envUrl = `${process.env.NEXT_PUBLIC_IP}`;
 import autoTable from "jspdf-autotable";
 import { errorAlert, successAlert } from "/components/Lib/Alerts";
 import { getDateTime } from "../lib/helpers";

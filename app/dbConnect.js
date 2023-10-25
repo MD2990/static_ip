@@ -33,7 +33,6 @@ export async function dbConnect() {
     };
 
     cached.promise = mongoose.connect(DB, opts).then((mongoose) => {
-      console.log("DB connection established");
       return mongoose;
     });
   }

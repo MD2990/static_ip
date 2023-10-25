@@ -3,9 +3,7 @@ import Add from "./Add";
 
 // get data
 async function getData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_IP}/add_device/api`, {
-    next: { tags: ["unq_device"] },
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_IP}/add_device/api`);
   const data = await res.json();
   return data;
 }

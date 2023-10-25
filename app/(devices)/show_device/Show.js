@@ -37,20 +37,25 @@ export default function Show({ device }) {
   }, [snap.PER_PAGE, snap.offset, snap.searchResults]);
 
   // create delete Function
-  const deleteFunc = useCallback(async (e) => {
-    await handleFormDelete({
-      handleDelete: () =>
-        handleDelete({ api: `/edit_device/api?id=${e._id}` }).then(() => {
-          state.searchResults = state.searchResults.filter(
-            (p) => p._id !== e._id
-          );
-          state.device = state.device.filter((p) => p._id !== e._id);
-          state.searchTerm = "";
-          router.refresh();
-          state.devicesTotal = state.device.length;
-        }),
-    });
-  }, [router]);
+  const deleteFunc = useCallback(
+    async (e) => {
+      await handleFormDelete({
+        handleDelete: () =>
+          handleDelete({ api: `/edit_device/api?id=${e._id}` }).then(() => {
+            state.searchResults = state.searchResults.filter(
+              (p) => p._id !== e._id
+            );
+
+            router.refresh();
+            state.device = state.device.filter((p) => p._id !== e._id);
+            state.searchTerm = "";
+
+            state.devicesTotal = state.device.length;
+          }),
+      });
+    },
+    [router]
+  );
 
   return (
     <>

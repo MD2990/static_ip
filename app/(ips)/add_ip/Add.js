@@ -18,7 +18,6 @@ export default function Add({ emp, devices }) {
 
   async function add(values) {
     await post({ values, api: "/add_ip/api", name: values.ip });
-    router.refresh();
   }
 
   return (
@@ -37,6 +36,7 @@ export default function Add({ emp, devices }) {
         onSubmit={async (values, actions) => {
           actions.setSubmitting(false);
           await add(values);
+          router.refresh();
         }}
         validationSchema={ipValidationSchema}
       >

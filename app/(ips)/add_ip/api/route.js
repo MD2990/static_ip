@@ -2,7 +2,6 @@ import { dbConnect } from "@app/dbConnect";
 import DEVICES from "@models/ips/DEVICES";
 import EMP from "@models/ips/EMP";
 import IPS from "@models/ips/IPS";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -28,7 +27,6 @@ export async function POST(request) {
         }
       );
 
-    revalidateTag("home");
     // Attempt to save the data
     return await IPS.create({
       ip,
@@ -62,7 +60,7 @@ export async function GET() {
     await dbConnect();
 
     // get devices with only device_type
-    
+
     const devices = await DEVICES.find({})
       .select("device_type -_id")
       .sort({ updatedAt: -1 });

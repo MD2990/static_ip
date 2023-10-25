@@ -20,7 +20,6 @@ export default function Edit({ data }) {
         api: "/edit_device/api",
         field_name: values.device_type,
       }).then(() => {
-        router.refresh();
         setTimeout(() => {
           router.back();
         }, 500);
@@ -33,8 +32,9 @@ export default function Edit({ data }) {
     await handleFormDelete({
       handleDelete: () => {
         handleDelete({ api: `/edit_device/api?id=${_id}` });
-        router.refresh();
+
         setTimeout(() => {
+          router.refresh();
           router.back();
         }, 500);
       },
@@ -52,6 +52,7 @@ export default function Edit({ data }) {
         }}
         onSubmit={async (values) => {
           await put(values);
+          router.refresh();
         }}
         validationSchema={deviceValidationSchema}
       >

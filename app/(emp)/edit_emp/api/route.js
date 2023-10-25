@@ -1,10 +1,9 @@
 import { dbConnect } from "@app/dbConnect";
 import EMP from "@models/ips/EMP";
-
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
+// GET /api/emp/edit_emp
 export async function GET(request) {
   try {
     await dbConnect();
@@ -24,6 +23,8 @@ export async function GET(request) {
     return NextResponse.json({ error: error.message, status: 500 });
   }
 }
+
+// DELETE /api/emp/edit_emp
 export async function DELETE(request) {
   try {
     await dbConnect();
@@ -35,21 +36,16 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 
-    await EMP.findByIdAndDelete(id).catch((err) => {
-      return NextResponse.json({ error: err.message, status: 500 });
-    });
-    revalidateTag("emp_home");
-    revalidateTag("home");
-    revalidateTag("get_lists");
-
+    await EMP.findByIdAndDelete(id).catch((err) =>
+      NextResponse.json({ error: err.message, status: 500 })
+    );
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
   }
 }
 
-// PUT
-
+// PUT /api/emp/edit_emp
 export async function PUT(request) {
   try {
     await dbConnect();
@@ -65,20 +61,16 @@ export async function PUT(request) {
     // Attempt to save the data
     return await EMP.findByIdAndUpdate(_id, {
       employee_name,
-    }).then(() => {
-      revalidateTag("emp_home");
-      revalidateTag("emp_id");
-      revalidateTag("get_lists");
-
-      return NextResponse.json(
+    }).then(() =>
+      NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      );
-    });
+      )
+    );
 
     // Data was saved successfully
   } catch (error) {

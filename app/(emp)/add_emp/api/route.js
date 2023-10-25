@@ -1,6 +1,5 @@
 import { dbConnect } from "@app/dbConnect";
 import EMP from "@models/ips/EMP";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -28,19 +27,16 @@ export async function POST(request) {
     // Attempt to save the data
     return await EMP.create({
       employee_name,
-    }).then(() => {
-      revalidateTag("emp_home");
-      revalidateTag("get_lists");
-
-      return NextResponse.json(
+    }).then(() =>
+      NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      );
-    });
+      )
+    );
 
     // Data was saved successfully
   } catch (error) {

@@ -12,7 +12,6 @@ export default function Add() {
 
   async function add(values) {
     await post({ values, api: "/add_emp/api", name: values.employee_name });
-    router.refresh();
   }
 
   return (
@@ -26,6 +25,7 @@ export default function Add() {
         }}
         onSubmit={async (values, actions) => {
           await add(values);
+            router.refresh();
           actions.resetForm();
         }}
         validationSchema={empValidationSchema}

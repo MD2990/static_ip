@@ -1,6 +1,5 @@
 import { dbConnect } from "@app/dbConnect";
 import IPS from "@models/ips/IPS";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
@@ -14,10 +13,10 @@ export async function GET(request) {
       return NextResponse.json({ error: "id is required", status: 404 });
     }
 
-    const ip = await IPS.findById(id).catch((err) => {
-      return NextResponse.json({ error: err.message, status: 500 });
-    });
-    revalidateTag("get_lists");
+    const ip = await IPS.findById(id).catch((err) =>
+      NextResponse.json({ error: err.message, status: 500 })
+    );
+
     return NextResponse.json(ip);
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
@@ -37,8 +36,6 @@ export async function DELETE(request) {
     await IPS.findByIdAndDelete(id).catch((err) => {
       return NextResponse.json({ error: err.message, status: 500 });
     });
-    /*   revalidateTag("home");
-    revalidateTag("id"); */
     return NextResponse.json({ done: true, status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message, status: 500 });
@@ -67,18 +64,16 @@ export async function PUT(request) {
       device_type,
       location,
       added_date,
-    }).then(() => {
-      revalidateTag("home");
-      revalidateTag("edit_ip");
-      return NextResponse.json(
+    }).then(() =>
+      NextResponse.json(
         {
           message: "Added Successfully",
         },
         {
           status: 200,
         }
-      );
-    });
+      )
+    );
 
     // Data was saved successfully
   } catch (error) {

@@ -37,21 +37,23 @@ export default function Show({ emp }) {
   }, [snap.PER_PAGE, snap.offset, snap.searchResults]);
 
   // create delete Function
-  const deleteFunc = useCallback(async (e) => {
-    await handleFormDelete({
-      handleDelete: () =>
-        handleDelete({ api: `/edit_emp/api?id=${e._id}` }).then(() => {
-          state.searchResults = state.searchResults.filter(
-            (p) => p._id !== e._id
-          );
-          state.emp = state.emp.filter((p) => p._id !== e._id);
-          state.searchTerm = "";
-          router.refresh();
-          state.empTotal = state.emp.length;
-             
-        }),
-    });
-  }, [router]);
+  const deleteFunc = useCallback(
+    async (e) => {
+      await handleFormDelete({
+        handleDelete: () =>
+          handleDelete({ api: `/edit_emp/api?id=${e._id}` }).then(() => {
+            state.searchResults = state.searchResults.filter(
+              (p) => p._id !== e._id
+            );
+            state.emp = state.emp.filter((p) => p._id !== e._id);
+            state.searchTerm = "";
+            router.refresh();
+            state.empTotal = state.emp.length;
+          }),
+      });
+    },
+    [router]
+  );
 
   return (
     <>
