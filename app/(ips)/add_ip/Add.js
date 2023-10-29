@@ -33,8 +33,7 @@ export default function Add({ emp, devices }) {
           added_by: "",
           notes: "No Notes",
         }}
-        onSubmit={async (values, actions) => {
-          actions.setSubmitting(false);
+        onSubmit={async (values) => {
           await add(values);
           router.refresh();
         }}

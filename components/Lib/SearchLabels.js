@@ -32,7 +32,7 @@ function SearchLabels({ devices }) {
     return color;
   };
 
-  if (snap.ips.length === 0) return null;
+  if (!snap.ips?.length) return null;
   return (
     <Wrap p="2" m="2">
       {devices.map((e, i) => {
@@ -75,7 +75,7 @@ function SearchLabels({ devices }) {
         );
       })}
 
-      {(snap.isDisabled && snap.searchTerm.length>0 ) && (
+      {snap.isDisabled && snap.searchTerm.length > 0 && (
         <Button
           colorScheme="gray"
           fontSize={["sm", "md", "lg", "xl"]}
