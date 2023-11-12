@@ -3,25 +3,6 @@ import IPS from "@models/ips/IPS";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
-export async function GET(request) {
-  try {
-    await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "id is required", status: 404 });
-    }
-
-    const ip = await IPS.findById(id).catch((err) =>
-      NextResponse.json({ error: err.message, status: 500 })
-    );
-
-    return NextResponse.json(ip);
-  } catch (error) {
-    return NextResponse.json({ error: error.message, status: 500 });
-  }
-}
 export async function DELETE(request) {
   try {
     await dbConnect();

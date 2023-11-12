@@ -47,15 +47,3 @@ export async function POST(request) {
     );
   }
 }
-export async function GET() {
-  try {
-    await dbConnect();
-
-    // get only unique device types
-    const device = await DEVICES.find({}).distinct("device_type");
-
-    return NextResponse.json(device);
-  } catch (error) {
-    return NextResponse.json({ error: error.message, status: 500 });
-  }
-}

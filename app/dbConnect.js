@@ -27,8 +27,6 @@ export async function dbConnect() {
 
   if (!cached.promise) {
     const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       family: 4,
     };
 

@@ -3,27 +3,6 @@ import EMP from "@models/ips/EMP";
 import { NextResponse } from "next/server";
 var mongoose = require("mongoose");
 
-// GET /api/emp/edit_emp
-export async function GET(request) {
-  try {
-    await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "id is required", status: 404 });
-    }
-
-    const ip = await EMP.findById(id).catch((err) => {
-      return NextResponse.json({ error: err.message, status: 500 });
-    });
-
-    return NextResponse.json(ip);
-  } catch (error) {
-    return NextResponse.json({ error: error.message, status: 500 });
-  }
-}
-
 // DELETE /api/emp/edit_emp
 export async function DELETE(request) {
   try {
