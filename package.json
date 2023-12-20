@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "upg": "pnpm up --latest"
+    "upg": "yarn upgrade --latest"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -21,7 +21,8 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.1",
     "mongoose": "^8.0.2",
-    "next": "14.0.3",
+    "next": "14.0.4",
+    "next-auth": "^4.24.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
@@ -34,7 +35,7 @@
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.3",
     "eslint": "^8.54.0",
-    "eslint-config-next": "14.0.3",
+    "eslint-config-next": "14.0.4",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",

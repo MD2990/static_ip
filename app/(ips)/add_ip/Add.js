@@ -3,7 +3,7 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import { Divider, Wrap, Center } from "@chakra-ui/react";
+import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import {
   CustomField,
@@ -21,10 +21,9 @@ export default function Add({ emp, devices }) {
   }
 
   return (
-    <>
-      <Center mt="0.5%">
-        <Title title={"Add New IP"} />
-      </Center>
+    <VStack m="2" p="2" justify={"center"}>
+      <Title title={"Add New IP"} />
+
       <Formik
         initialValues={{
           ip: "",
@@ -42,36 +41,34 @@ export default function Add({ emp, devices }) {
         {(props) => {
           return (
             <Form>
-              <Center>
-                <Wrap
-                  shadow="lg"
-                  maxW={"45%"}
-                  minW={"35%"}
-                  justify="center"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  m={[4, 6, 8]}
-                  spacing={[2, 3, 4, 6]}
-                  p={[1, 2, 3, 4]}
-                >
+              <Grid
+                boxShadow={"xl"}
+                rounded={"xl"}
+                p={[2, 3, 4]}
+                templateColumns="repeat(1, 1fr)"
+                gap={[1, 2, 3, 4]}
+                borderTop={"1px solid lightGray "}
+              >
+                <GridItem rowSpan={1}>
                   <CustomField fieldName="ip" labelName="IP" />
+                </GridItem>
+                <GridItem rowSpan={1}>
                   <CustomField
                     fieldName="location"
                     labelName="Location/Office"
                   />
+                </GridItem>
 
-                  <DropdownLists devices={devices} emp={emp} />
-                  <CustomTextArea fieldName="notes" labelName="Notes" />
+                <DropdownLists devices={devices} emp={emp} />
+                <CustomTextArea fieldName="notes" labelName="Notes" />
 
-                  <Divider color="gray.100" />
-
-                  <FormBottomButton router={router} props={props} />
-                </Wrap>
-              </Center>
+                <Divider color="gray.100" />
+                <FormBottomButton router={router} props={props} />
+              </Grid>
             </Form>
           );
         }}
       </Formik>
-    </>
+    </VStack>
   );
 }

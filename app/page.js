@@ -1,10 +1,9 @@
-import React from "react";
-import Show from "./(ips)/Show";
 import { dbConnect } from "./dbConnect";
 import IPS from "@models/ips/IPS";
 import DEVICES from "@models/ips/DEVICES";
 import EMP from "@models/ips/EMP";
 import { convertDate } from "@lib/helpers";
+import Show from "./(ips)/Show";
 
 async function getData() {
   try {

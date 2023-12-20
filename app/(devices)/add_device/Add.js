@@ -3,7 +3,14 @@ import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
-import { Wrap, Center, Divider, Button } from "@chakra-ui/react";
+import {
+  Wrap,
+  Divider,
+  Button,
+  VStack,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@components/Lib/Fields";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import state from "@app/store";
@@ -11,9 +18,7 @@ import { useSnapshot } from "valtio";
 
 export default function Add({ data }) {
   const router = useRouter();
-
   const snap = useSnapshot(state);
-
   async function add(values) {
     await post({ values, api: "/add_device/api", name: values.device_type });
   }
@@ -43,36 +48,34 @@ export default function Add({ data }) {
     data.some((d) => d.toLowerCase() === device.toLowerCase());
 
   return (
-    <>
-      <Center mt="15%">
-        <Title title={"Add Device"} />
-      </Center>
-      {
-        <Wrap
-          spacing={4}
-          justify={"center"}
-          p="2"
-          m="2"
-          boxShadow={"lg"}
-          borderWidth="1px"
-          rounded={"sm"}
-        >
-          {devicesArray.map((device, i) => (
-            <Button
-              isDisabled={filteredDevices(device)}
-              size={"sm"}
-              key={i}
-              variant="solid"
-              colorScheme="telegram"
-              onClick={() => {
-                state.deviceDefaultValue = device;
-              }}
-            >
-              {device}
-            </Button>
-          ))}
-        </Wrap>
-      }
+    <VStack minH="60vh" p="2" m="2" justify={"center"}>
+      <Title title={"Add Device"} />
+
+      <Wrap
+        spacing={4}
+        justify={"center"}
+        p="2"
+        m="2"
+        boxShadow={"lg"}
+        borderWidth="1px"
+        rounded={"sm"}
+      >
+        {devicesArray.map((device, i) => (
+          <Button
+            isDisabled={filteredDevices(device)}
+            size={"sm"}
+            key={i}
+            variant="solid"
+            colorScheme="telegram"
+            onClick={() => {
+              state.deviceDefaultValue = device;
+            }}
+          >
+            {device}
+          </Button>
+        ))}
+      </Wrap>
+
       <Formik
         initialValues={{
           device_type: snap.deviceDefaultValue,
@@ -89,32 +92,29 @@ export default function Add({ data }) {
         {(props) => {
           return (
             <Form>
-              <Center>
-                <Wrap
-                  shadow="lg"
-                  maxW={"45%"}
-                  minW={"35%"}
-                  justify="center"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  m={[4, 6, 8]}
-                  spacing={[2, 3, 4, 6]}
-                  p={[1, 2, 3, 4]}
-                >
+              <Grid
+                boxShadow={"xl"}
+                rounded={"xl"}
+                p={[2, 3, 4]}
+                templateColumns="repeat(1, 1fr)"
+                gap={[1, 2, 3, 4]}
+                borderTop={"1px solid lightGray "}
+              >
+                <GridItem>
                   <CustomField
                     fieldName="device_type"
                     labelName="Device Name"
                   />
+                </GridItem>
 
-                  <Divider borderColor={"gray.100"} />
+                <Divider borderColor={"gray.100"} />
 
-                  <FormBottomButton router={router} props={props} />
-                </Wrap>
-              </Center>
+                <FormBottomButton router={router} props={props} />
+              </Grid>
             </Form>
           );
         }}
       </Formik>
-    </>
+    </VStack>
   );
 }

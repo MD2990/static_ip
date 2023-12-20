@@ -1,5 +1,4 @@
 import { CustomDropdown } from "@components/Lib/Fields";
-import React from "react";
 
 export default function DropdownLists({ emp, devices }) {
   return (

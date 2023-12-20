@@ -2,7 +2,7 @@
 import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Wrap, Center, Divider } from "@chakra-ui/react";
+import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
 import {
   CustomField,
   CustomTextArea,
@@ -47,10 +47,8 @@ export default function Edit({ data, devices, emp }) {
   }
 
   return (
-    <>
-      <Center mt="3%">
-        <Title title={"Edit"} />
-      </Center>
+    <VStack m="2" p="2" justify={"center"}>
+      <Title title={"Edit"} />
       <Formik
         initialValues={{
           location,
@@ -67,42 +65,44 @@ export default function Edit({ data, devices, emp }) {
         {(props) => {
           return (
             <Form>
-              <Center>
-                <Wrap
-                  shadow="lg"
-                  maxW={"50%"}
-                  minW={"8rem"}
-                  justify="center"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  m={[4, 6, 8, 10]}
-                  spacing={[2, 3, 4, 6]}
-                  p={[1, 2, 3, 4]}
-                >
+              <Grid
+                boxShadow={"xl"}
+                rounded={"xl"}
+                p={[2, 3, 4]}
+                templateColumns="repeat(1, 1fr)"
+                gap={[1, 2, 3, 4]}
+                borderTop={"1px solid lightGray "}
+              >
+                <GridItem>
                   <CustomField fieldName="ip" labelName="IP" />
+                </GridItem>
+                <GridItem>
                   <CustomField
                     fieldName="location"
                     labelName="Location/Office"
                   />
+                </GridItem>
 
+                <GridItem>
                   <DropdownLists emp={emp} devices={devices} />
+                </GridItem>
 
+                <GridItem>
                   <CustomTextArea fieldName="notes" labelName="Notes" />
+                </GridItem>
 
-                  <Divider color="gray.100" />
-
-                  <FormBottomButton
-                    router={router}
-                    props={props}
-                    deleteBtn
-                    onDelete={onDelete}
-                  />
-                </Wrap>
-              </Center>
+                <Divider color="gray.100" />
+                <FormBottomButton
+                  router={router}
+                  props={props}
+                  deleteBtn
+                  onDelete={onDelete}
+                />
+              </Grid>
             </Form>
           );
         }}
       </Formik>
-    </>
+    </VStack>
   );
 }
