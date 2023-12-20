@@ -29,8 +29,7 @@ export const options = {
       async authorize(credentials) {
         if (
           credentials.username === "admin" &&
-          (credentials.password === "P@ssw0rd" ||
-            credentials.password === "Golden@Day")
+          (credentials.password === "admin+USER=2020")
         ) {
           return {
             _id: "1",
