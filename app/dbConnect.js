@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DB = process.env.DB;
+const DB = process.env.MONGODB_URI;
 
 export async function dbConnect() {
   mongoose.set("strictQuery", true);
