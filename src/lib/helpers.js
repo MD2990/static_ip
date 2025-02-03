@@ -1,3 +1,5 @@
+import { formatDistanceToNowStrict, formatISO9075 } from "date-fns";
+
 export const getDateTime = () => {
 	const date = new Date();
 	const day = date.toDateString();
@@ -24,18 +26,8 @@ export function convertDate(theDate) {
 		return { ...ee._doc, createdAt: CREATED, updatedAt: UPDATED };
 
 		function convert(e) {
-			const date = new Date(e);
-			const d = date.getDate(e) || "";
-			const m = date.getMonth(e) + 1 || "";
-			const y = date.getFullYear(e) || "";
-			const h = date.getHours(e) || "";
-			const min = date.getMinutes(e) || "";
-			const s = date.getSeconds(e) || "";
-
-			// hours are 0-based
-			const tim = h > 12 ? "PM" : "AM";
-
-			e = `${y}/${m}/${d} ${h}:${min}:${s} ${tim}`;
+			e = formatISO9075(new Date(e));
+			e = formatDistanceToNowStrict(new Date(e), { addSuffix: true });
 			return e;
 		}
 	});

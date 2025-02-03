@@ -6,6 +6,7 @@ import { convertDate } from "@lib/helpers";
 import EMP from "@models/ips/EMP";
 import { dbConnect } from "@app/dbConnect";
 import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function getIP() {
 	try {
@@ -86,14 +87,14 @@ export async function getEmpAndDevicesList() {
 export async function updateIP({ values, _id }) {
 	try {
 		await dbConnect();
-		const ip = await IPS.findOneAndUpdate(
+		await IPS.findOneAndUpdate(
 			{ _id },
 			{ ...values, _id },
 			{ new: true }
 		).catch((err) => {
 			throw new Error(err.message);
 		});
-
+		revalidatePath("/");
 		return true;
 	} catch (error) {
 		throw new Error(error.message);
@@ -107,7 +108,25 @@ export async function addIP(values) {
 		await IPS.create(values).catch((err) => {
 			throw new Error(err.message);
 		});
+		revalidatePath("/");
+		return true;
+	} catch (error) {
+		throw new Error(error.message);
+	}
+}
 
+// delete function
+export async function deleteIP({ id }) {
+	try {
+		await dbConnect();
+		const ip = await IPS.findByIdAndDelete(id).catch((err) => {
+			throw new Error(err.message);
+		});
+		if (!ip) {
+			throw new Error("IP not found");
+		}
+
+		revalidatePath("/");
 		return true;
 	} catch (error) {
 		throw new Error(error.message);

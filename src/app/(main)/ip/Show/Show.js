@@ -1,6 +1,6 @@
 "use client";
 import state from "@app/store";
-import { handleFormDelete } from "@lib/Alerts";
+import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
 import DataDisplay from "@lib/DataDisplay";
 import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import ClientSidePaginationAndSearch from "../ClientSidePaginationAndSearch";
 import SearchLabels from "@lib/SearchLabels";
 import { useSnapshot } from "valtio";
 import TopArea from "@lib/TopArea";
+import { deleteIP } from "@server/ip/actions";
 
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
@@ -18,15 +19,25 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 
 	const deleteFunc = useCallback(
 		async (e) => {
-			await handleFormDelete({
-				handleDelete: () =>
-					handleDelete({ api: `/api?id=${e._id}` }).then(() => {
-						// filter out the deleted item
-						state.ips = state.ips.filter((item) => item._id !== e._id);
-						state.searchTerm = "";
-						router.refresh();
-					}),
-			});
+			try {
+				await handleFormDelete({
+					handleDelete: async () =>
+						deleteIP({ id: e })
+							.then(() => {
+								// filter out the deleted item
+								state.ip = state.ip.filter((item) => item._id !== e);
+								state.searchTerm = "";
+								successAlert("IP Deleted Successfully");
+								router.refresh();
+							})
+							.catch((error) => {
+								errorAlert(error.message);
+							}),
+				});
+			} catch (error) {
+				errorAlert(error.message);
+			}
+			//router.refresh();
 		},
 		[router]
 	);
@@ -57,7 +68,7 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 			<SearchLabels devices={devices} ip={ip} />
 
 			<ClientSidePaginationAndSearch
-				itemsPerPage={2}
+				itemsPerPage={10}
 				data={snap.ip.map((e) => e)}
 				renderItems={(currentItems) => (
 					<DataDisplay

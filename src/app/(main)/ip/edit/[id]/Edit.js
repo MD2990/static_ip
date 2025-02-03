@@ -14,14 +14,14 @@ import { Form, Formik } from "formik";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
 import DropdownLists from "../../add/DropdownLists";
-import { updateIP } from "@server/ip/actions";
+import { deleteIP, updateIP } from "@server/ip/actions";
 
 export default function Edit({ data, devices, emp }) {
 	const { location, device_type, added_by, _id, ip, notes } = data;
 	const router = useRouter();
 	async function put(values) {
 		try {
-			updateIP({ values, _id });
+			await updateIP({ values, _id });
 			successAlert("IP Details Updated Successfully");
 			router.back();
 		} catch (error) {
@@ -30,8 +30,9 @@ export default function Edit({ data, devices, emp }) {
 	}
 	async function onDelete() {
 		await handleFormDelete({
-			handleDelete: () => {
-				handleDelete({ id: _id });
+			handleDelete: async () => {
+				await deleteIP({ id: _id });
+				successAlert("IP Deleted Successfully");
 				router.back();
 			},
 		});
