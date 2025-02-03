@@ -1,17 +1,20 @@
 "use client";
 import state from "@app/store";
-import { Center } from "@chakra-ui/react";
 import { handleFormDelete } from "@lib/Alerts";
 import DataDisplay from "@lib/DataDisplay";
 import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import ClientSidePaginationAndSearch from "../ClientSidePaginationAndSearch";
 import SearchLabels from "@lib/SearchLabels";
+import { useSnapshot } from "valtio";
+import TopArea from "@lib/TopArea";
 
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
 	const ids = ip.map((e) => e._id);
+
+	const snap = useSnapshot(state);
 
 	const deleteFunc = useCallback(
 		async (e) => {
@@ -28,33 +31,34 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 		[router]
 	);
 
-	const filteredData = ["_id", "updatedAt", "createdAt", "__v"];
+	useEffect(() => {
+		state.ip = ip;
+		state.title = "IP Addresses";
+		state.empTotal = empTotal;
+		state.devicesTotal = devicesTotal;
+	}, []);
+
+	const filteredData = ["_id"];
 	const headers =
 		ip.length > 0
 			? [
 					...Object.keys(ip[0])
 						.filter(
 							(key) => !filteredData.includes(key) // Exclude _id from headers
-						) // Exclude _id from headers
+						) // Exclude _id from headers */
 						.map((key) => key.replace(/_/g, " ").toUpperCase()),
 			  ]
 			: [];
 
 	return (
 		<>
-			{/* 	<TopArea data={state.ips} path={"/add_ip"} title={"Add New IP"}></TopArea>
-			 */}
+			<TopArea data={ip} path={"/ip/add"} title={"Add New IP"}></TopArea>
 
 			<SearchLabels devices={devices} ip={ip} />
 
 			<ClientSidePaginationAndSearch
 				itemsPerPage={2}
-				data={
-					ip.map((e) => {
-						const { _id, updatedAt, createdAt, __v, ...rest } = e;
-						return { ...rest };
-					}) // Exclude _id from data
-				}
+				data={snap.ip.map((e) => e)}
 				renderItems={(currentItems) => (
 					<DataDisplay
 						headers={headers}

@@ -1,6 +1,7 @@
 import state from "@app/store";
-import { Button, HStack, Flex, Text, Box } from "@chakra-ui/react";
+import { Button, HStack, Flex, Text, Box, IconButton } from "@chakra-ui/react";
 import React from "react";
+import { LuX } from "react-icons/lu";
 import { useSnapshot } from "valtio";
 function SearchLabels({ devices, ip }) {
 	const snap = useSnapshot(state);
@@ -60,7 +61,7 @@ function SearchLabels({ devices, ip }) {
 								fontWeight="bold"
 								textShadow="0px 1px 0px white"
 							>
-								{`${Math.round((e.count / state.ip.length) * 100)} %`}
+								{`${Math.round((e.count / ip.length) * 100)} %`}
 							</Text>
 						</Box>
 					</Flex>
@@ -68,18 +69,18 @@ function SearchLabels({ devices, ip }) {
 			})}
 
 			{snap.isDisabled && snap.searchTerm.length > 0 && (
-				<Button
-					colorScheme="gray"
-					fontSize={["sm", "md", "lg", "xl"]}
-					color="red.500"
-					h="auto"
+				<IconButton
+					variant={"plain"}
+					colorPalette="red"
+					size={"2xl"}
+					rounded={"full"}
 					onClick={() => {
 						state.searchTerm = "";
 						state.isDisabled = false;
 					}}
 				>
-					☓
-				</Button>
+					<LuX />
+				</IconButton>
 			)}
 		</HStack>
 	);

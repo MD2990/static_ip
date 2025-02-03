@@ -1,15 +1,16 @@
 import state from "@app/store";
-import { VStack, Input, Center } from "@chakra-ui/react";
+import { Input, Center } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { useSnapshot } from "valtio";
 
 const ClientSidePaginationAndSearch = ({
 	itemsPerPage = 5,
 	renderItems,
 	data = [],
 }) => {
+	const snap = useSnapshot(state);
 	const [currentPage, setCurrentPage] = useState(0);
-	const [searchTerm, setSearchTerm] = useState("");
 
 	// Show pagination if data is more than itemsPerPage on first render
 	const [showPagination, setShowPagination] = useState(
@@ -23,10 +24,13 @@ const ClientSidePaginationAndSearch = ({
 	const filteredData = useCallback(() => {
 		return data.filter((item) =>
 			Object.values(item).some((value) =>
-				value.toString().toLowerCase().includes(searchTerm.toLowerCase().trim())
+				value
+					.toString()
+					.toLowerCase()
+					.includes(state.searchTerm.toLowerCase().trim())
 			)
 		);
-	}, [data, searchTerm]);
+	}, [data]);
 
 	const offset = currentPage * itemsPerPage;
 	const currentItems = filteredData().slice(offset, offset + itemsPerPage);
@@ -40,7 +44,8 @@ const ClientSidePaginationAndSearch = ({
 	}, [filteredData, data]);
 
 	const handleSearchChange = (event) => {
-		setSearchTerm(event.target.value);
+		//setSearchTerm(event.target.value);
+		state.searchTerm = event.target.value;
 		// Reset to first page on new search
 		setCurrentPage(0);
 	};
@@ -53,7 +58,7 @@ const ClientSidePaginationAndSearch = ({
 						w="50%"
 						type="search"
 						placeholder={"Search By Any Field"}
-						value={searchTerm}
+						value={snap.searchTerm}
 						onChange={handleSearchChange}
 						size={["sm", "md"]}
 						fontSize={["sm", "md"]}

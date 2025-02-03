@@ -1,23 +1,28 @@
 "use client";
 import React from "react";
 import { Form, Formik } from "formik";
-import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
+import {  VStack, Grid, GridItem, Separator } from "@chakra-ui/react";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import {
+	CustomDropdown,
 	CustomField,
 	CustomTextArea,
 	FormBottomButton,
 	Title,
 } from "@lib/Fields";
-import DropdownLists from "./DropdownLists";
+import { addIP } from "@server/ip/actions";
+import { errorAlert, successAlert } from "@lib/Alerts";
 
 export default function Add({ emp, devices }) {
 	const router = useRouter();
-
 	async function add(values) {
-		await post({ values, api: "/add_ip/api", name: values.ip });
+		try {
+			await addIP(values);
+			successAlert("IP Added Successfully");
+		} catch (error) {
+			errorAlert(error.message);
+		}
 	}
 
 	return (
@@ -28,7 +33,7 @@ export default function Add({ emp, devices }) {
 				initialValues={{
 					ip: "",
 					location: "",
-					device_type: "Printer",
+					device_type: "",
 					added_by: "",
 					notes: "No Notes",
 				}}
@@ -59,10 +64,25 @@ export default function Add({ emp, devices }) {
 									/>
 								</GridItem>
 
-								<DropdownLists devices={devices} emp={emp} />
+								<GridItem>
+									<CustomDropdown
+										fieldName="device_type"
+										labelName="Device Type"
+										arr={devices}
+										keys={"device_type"}
+									/>
+								</GridItem>
+								<GridItem>
+									<CustomDropdown
+										fieldName="added_by"
+										labelName="Added By"
+										arr={emp}
+										keys={"employee_name"}
+									/>
+								</GridItem>
 								<CustomTextArea fieldName="notes" labelName="Notes" />
 
-								<Divider color="gray.100" />
+								<Separator color="gray.100" mt="5" />
 								<FormBottomButton router={router} props={props} />
 							</Grid>
 						</Form>

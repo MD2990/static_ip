@@ -2,6 +2,6 @@
 import { MySkeletons } from "@lib/Fields";
 import React from "react";
 
-export default function loading() {
+export default function Loading() {
 	return <MySkeletons />;
 }

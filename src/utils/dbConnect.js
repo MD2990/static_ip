@@ -4,22 +4,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getDateTime } from "../lib/helpers";
 import { errorAlert, successAlert } from "@lib/Alerts";
+import { addIP } from "@server/ip/actions";
 
-export async function post({ values, api, name }) {
-	await axios
-		.post(api, values)
-		.then((res) => {
-			return res.status === 200
-				? successAlert("Added Successfully")
-				: errorAlert();
-		})
-		.catch((error) => {
-			if (error) {
-				if (error?.response?.status === 409) {
-					errorAlert(`🚫 ${name} Already Exist...`);
-				} else errorAlert(error);
-			}
-		});
+export async function post({ values }) {
+	await addIP({ values });
 }
 
 export const handlePut = async ({

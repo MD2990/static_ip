@@ -1,30 +1,20 @@
 import { Flex, Stat, HStack } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import SearchInput from "./SearchInput";
+import React from "react";
 import { useSnapshot } from "valtio";
 import { TopBtn } from "./BTNs";
 import {
 	FcBusinessman,
 	FcHome,
 	FcMultipleSmartphones,
-	FcPlus,
-	FcPrint,
 	FcViewDetails,
 } from "react-icons/fc";
 import state from "@app/store";
 import { usePathname, useRouter } from "next/navigation";
 import printPdf from "@lib/print";
 import Menus, { MenuItems } from "./Menus";
-import { getLocalStorage } from "@lib/helpers";
+import { LuPlus, LuPrinter } from "react-icons/lu";
 
 export default function TopArea({ data, path, title }) {
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			state.empTotal = getLocalStorage("empTotal");
-			state.devicesTotal = getLocalStorage("devicesTotal");
-		}
-	}, []);
-
 	const snap = useSnapshot(state);
 	const pathname = usePathname();
 	const router = useRouter();
@@ -32,14 +22,14 @@ export default function TopArea({ data, path, title }) {
 	return (
 		<HStack
 			wrap={"wrap"}
-			justify={"center"}
+			justify={"space-evenly"}
 			direction={"row"}
 			boxShadow={"lg"}
 			p={["1", "2", "3", "4"]}
 			rounded={"2xl"}
 			spacing={[2, 3, 4, 8]}
 			align="flex-end"
-			mt="10%"
+			mt="3%"
 		>
 			{pathname === "/" ? null : (
 				<Flex align="flex-start">
@@ -50,46 +40,43 @@ export default function TopArea({ data, path, title }) {
 					/>
 				</Flex>
 			)}
-			{snap.searchResults.length ? (
+			{data?.length ? (
 				<Flex align="flex-start">
 					<TopBtn
 						title="Print"
 						onClick={() => printPdf()}
-						Icons={<FcPrint />}
+						Icons={<LuPrinter />}
 					/>
 				</Flex>
 			) : null}
 			<Flex align="flex-start">
-				<SearchInput searchData={data} />
-			</Flex>
-			<Flex align="flex-start">
 				<TopBtn
 					title={title}
 					onClick={() => router.push(path)}
-					Icons={<FcPlus />}
+					Icons={<LuPlus />}
 				/>
 			</Flex>
 
 			<Menus title="Employees" total={state.empTotal}>
-				<MenuItems text="Add" path="/add_emp" Icons={FcBusinessman} />
-				<MenuItems text="Show" path="/show_emp" Icons={FcViewDetails} />
+				<MenuItems text="Add" path="/emp/add" Icons={FcBusinessman} />
+				<MenuItems text="Show" path="/emp/show" Icons={FcViewDetails} />
 			</Menus>
 
 			<Menus title="Devices" total={state.devicesTotal}>
 				<MenuItems
 					text="Add"
-					path="/add_device"
+					path="devices/add"
 					Icons={FcMultipleSmartphones}
 				/>
-				<MenuItems text="Show" path="/show_device" Icons={FcViewDetails} />
+				<MenuItems text="Show" path="/devices/show" Icons={FcViewDetails} />
 			</Menus>
-
 			<Flex align="flex-start" userSelect={"none"}>
 				<Stat.Root>
 					<Stat.Label
-						color={"gray.400"}
+						color={"gray.500"}
 						whiteSpace={"nowrap"}
-						fontSize={[3, 5, 10, 15]}
+						fontSize={[10, 15, 20]}
+						fontWeight={"bold"}
 					>
 						{" "}
 						Total:{" "}

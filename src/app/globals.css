@@ -1,10 +1,13 @@
+*{
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
 .pagination {
   display: flex;
   justify-content: space-between;
   list-style: none;
   cursor: pointer;
   color: #3d53d1;
-  font-family: sans-serif;
   margin-bottom: 15px;
 }
 

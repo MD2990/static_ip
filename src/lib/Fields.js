@@ -1,29 +1,38 @@
 import React from "react";
-import { Center, Box, Stack, Flex } from "@chakra-ui/react";
-import { Field } from "formik";
+import {
+	Center,
+	Stack,
+	Flex,
+	Fieldset,
+	Input,
+	Textarea,
+	Button,
+	createListCollection,
+} from "@chakra-ui/react";
+import { Field as FormikField } from "formik";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { IoSave } from "react-icons/io5";
 import { VscClearAll } from "react-icons/vsc";
 import { AiFillDelete } from "react-icons/ai";
-
-import { FormControl as FC, Select, Textarea } from "@chakra-ui/react";
-
+import { Field } from "@/components/ui/field";
 import {
-	Button,
-	FormErrorMessage,
-	FormLabel,
-	Input,
-	Skeleton,
-	SkeletonCircle,
-	SkeletonText,
-	Spinner,
-	Text,
-	HStack,
-} from "@chakra-ui/react";
+	NativeSelectField,
+	NativeSelectRoot,
+} from "@/components/ui/native-select";
+
+import { FormControl, Spinner, Text, HStack, Box } from "@chakra-ui/react";
 import { BiArrowBack } from "react-icons/bi";
 
 import { FcPrint } from "react-icons/fc";
-
+import { Skeleton, SkeletonCircle } from "@components/ui/skeleton";
+import {
+	SelectContent,
+	SelectItem,
+	SelectLabel,
+	SelectRoot,
+	SelectTrigger,
+	SelectValueText,
+} from "@/components/ui/select";
 export function Title({ title, children }) {
 	return (
 		<Center>
@@ -39,7 +48,6 @@ export function Title({ title, children }) {
 				textShadow={"0px 4px 10px gray"}
 				px={4}
 				userSelect="none"
-				noOfLines={2}
 			>
 				{title}
 			</Text>
@@ -80,48 +88,20 @@ export function Spans() {
 }
 
 export function MySkeletons() {
-	const Skeletons = () => (
-		<Box padding="4" boxShadow="lg" bg="white" borderRadius="2xl">
-			<Skeleton
-				height="20px"
-				startColor="green.50"
-				endColor="blue.300"
-				borderRadius="2xl"
-				mb="2"
-			/>
-			<SkeletonCircle
-				size="12"
-				startColor="green.50"
-				endColor="blue.300"
-				w="44"
-				ml="8"
-			/>
-			<SkeletonText
-				startColor="green.50"
-				endColor="blue.300"
-				mt="4"
-				noOfLines={6}
-				spacing="6"
-				h="15rem"
-				w="15rem"
-			/>
-		</Box>
-	);
 	return (
-		<HStack
-			wrap={"wrap"}
-			justify="center"
-			textAlign="center"
-			spacing={[1, 2, 3, 4]}
-			mt={["5%", "6%", "7%", "8%"]}
-		>
-			<Skeletons />
-			<Skeletons />
-			<Skeletons />
+		<HStack gap="5" justify={"center"} align={"center"} w="full" minH={"80dvh"}>
+			<Stack flex="1" gap={"4"} justify={"center"} align={"center"}>
+				<SkeletonCircle size="12" />
+				<Skeleton height="5" width="50%" />
+				<Skeleton height="5" width="50%" />
+				<Skeleton height="5" width="50%" />
+				<Skeleton height="5" width="50%" />
+				<Skeleton height="5" width="50%" />
+			</Stack>
 		</HStack>
 	);
 }
-const fontSize = ["sm", "md", "lg"];
+const fontSize = ["md", "lg", "xl"];
 
 export const CustomField = ({
 	fieldName,
@@ -130,115 +110,106 @@ export const CustomField = ({
 	disabled = false,
 }) => {
 	return (
-		<Field name={fieldName}>
+		<FormikField name={fieldName}>
 			{({ field, meta }) => (
-				<FC isInvalid={meta.touched && meta.error}>
-					<FormLabel
-						fontSize={fontSize}
-						fontWeight="bold"
-						htmlFor={fieldName}
-						noOfLines={1}
-					>
-						{labelName}
-					</FormLabel>
-					<Input
-						disabled={disabled}
-						{...field}
-						id={fieldName}
-						placeholder={labelName}
-						size={["sm", "md", "lg"]}
-						type={type}
-						fontSize={fontSize}
-						noOfLines={1}
-					/>
-					<FormErrorMessage noOfLines={1}>{meta.error}</FormErrorMessage>
-				</FC>
+				<Fieldset.Root invalid={meta.touched && meta.error}>
+					<Fieldset.Content>
+						<Field label={labelName}>
+							<Input
+								disabled={disabled}
+								{...field}
+								id={fieldName}
+								placeholder={labelName}
+								size={["sm", "md", "lg"]}
+								type={type}
+								fontSize={fontSize}
+							/>
+						</Field>
+					</Fieldset.Content>
+					{meta.touched && meta.error && (
+						<Fieldset.ErrorText>{meta.error}</Fieldset.ErrorText>
+					)}
+				</Fieldset.Root>
 			)}
-		</Field>
-	);
-};
-export const CustomTextArea = ({ fieldName, labelName }) => {
-	return (
-		<Field name={fieldName}>
-			{({ field, meta }) => (
-				<FC isInvalid={meta.touched && meta.error}>
-					<FormLabel fontSize={fontSize} fontWeight="bold" htmlFor={fieldName}>
-						{labelName}
-					</FormLabel>
-					<Textarea
-						{...field}
-						id={fieldName}
-						placeholder={labelName}
-						size={["sm", "md", "lg"]}
-						fontSize={fontSize}
-					/>
-				</FC>
-			)}
-		</Field>
+		</FormikField>
 	);
 };
 
-export const CustomDropdown = ({ fieldName, labelName, arr, keys, val }) => {
-	if (val)
-		arr = arr.filter((opt) => opt[keys].toLowerCase() !== val.toLowerCase());
+export const CustomTextArea = ({ fieldName, labelName }) => {
 	return (
-		<Field name={fieldName}>
+		<FormikField name={fieldName}>
 			{({ field, meta }) => (
-				<FC isInvalid={meta.touched && meta.error}>
-					<FormLabel fontSize={fontSize} fontWeight="bold" htmlFor={fieldName}>
-						{labelName}
-					</FormLabel>
-					<Select
-						fontSize={fontSize}
-						{...field}
-						id="fieldName"
-						placeholder="Select"
-						size={["sm", "md", "lg"]}
-					>
-						{val && (
-							/*    disabled because if the option is deleted or removed from the list the user should not reselect it */
-							<option key={val} value={val} disabled>
-								{val}
-							</option>
-						)}
-						{/*  applying a filter to remove duplicate selected item  */}
-						{arr.map((c, index) => (
-							<option key={c._id || index} value={c[keys]}>
-								{c[keys]}
-							</option>
-						))}
-					</Select>
-					<FormErrorMessage noOfLines={1}>{meta.error}</FormErrorMessage>
-				</FC>
+				<Fieldset.Root invalid={meta.touched && meta.error}>
+					<Fieldset.Content>
+						<Field label={labelName}>
+							<Textarea
+								{...field}
+								id={fieldName}
+								placeholder={labelName}
+								size={["sm", "md", "lg"]}
+								fontSize={fontSize}
+							/>
+						</Field>
+					</Fieldset.Content>
+					{meta.touched && meta.error && (
+						<Fieldset.ErrorText>{meta.error}</Fieldset.ErrorText>
+					)}
+				</Fieldset.Root>
 			)}
-		</Field>
+		</FormikField>
+	);
+};
+
+export const CustomDropdown = ({ fieldName, labelName, arr = [], keys }) => {
+	return (
+		<FormikField name={fieldName}>
+			{({ field, meta, form }) => (
+				<Field
+					mt="2"
+					label={labelName}
+					invalid={meta.touched && meta.error}
+					errorText={meta.touched && meta.error ? meta.error : undefined}
+				>
+					<NativeSelectRoot invalid={meta.touched && meta.error} {...field}>
+						<NativeSelectField placeholder="Select option" {...field}>
+							{arr.map((item, i) => (
+								<option key={i} value={item[keys]}>
+									{item[keys]}
+								</option>
+							))}
+						</NativeSelectField>
+					</NativeSelectRoot>
+				</Field>
+			)}
+		</FormikField>
 	);
 };
 
 export const DateField = () => {
 	return (
 		<Flex align="flex-start" minW={"50%"} maxW="50%">
-			<Field name="added_date">
+			<FormikField name="added_date">
 				{({ field, form }) => (
-					<FC isInvalid={form.errors.added_date && form.touched.added_date}>
-						<FormLabel
-							fontSize={fontSize}
-							fontWeight="bold"
-							htmlFor="added_date"
-						>
-							Added Date
-						</FormLabel>
-						<Input
-							{...field}
-							id="added_date"
-							type="date"
-							size="lg"
-							fontSize={fontSize}
-						/>
-						<FormErrorMessage>{form.errors.added_date}</FormErrorMessage>
-					</FC>
+					<Fieldset.Root
+						invalid={form.errors.added_date && form.touched.added_date}
+					>
+						<Fieldset.Content>
+							<Field label="Added Date">
+								<Input
+									{...field}
+									id="added_date"
+									type="date"
+									size="lg"
+									fontSize={fontSize}
+								/>
+							</Field>
+						</Fieldset.Content>
+						{form.touched.added_date && form.errors.added_date && (
+							<Fieldset.ErrorText>{form.errors.added_date}</Fieldset.ErrorText>
+						)}
+					</Fieldset.Root>
 				)}
-			</Field>
+			</FormikField>
 		</Flex>
 	);
 };
@@ -252,71 +223,75 @@ export const FormBottomButton = ({
 	return (
 		<Stack spacing={[1, 2, 3, 4]} direction={{ base: "column", sm: "row" }}>
 			<Button
-				w="full"
-				leftIcon={<IoMdArrowRoundBack />}
 				size={fontSize}
 				variant="outline"
-				colorScheme="blue"
+				colorPalette="blue"
 				type="button"
 				onClick={() => router.back()}
 			>
+				<IoMdArrowRoundBack />
 				Back
 			</Button>
-
 			<Button
-				w="full"
-				className="hvr-rectangle-out"
-				leftIcon={<VscClearAll />}
 				size={fontSize}
-				colorScheme="gray"
+				colorPalette="gray"
 				variant="outline"
 				type="button"
 				onClick={props.handleReset}
 			>
+				<VscClearAll />
 				Reset
 			</Button>
 
 			{deleteBtn && (
 				<Button
-					w="full"
 					size={fontSize}
-					leftIcon={<AiFillDelete />}
-					colorScheme="red"
+					colorPalette="red"
 					variant="outline"
 					type="button"
 					onClick={onDelete}
-					isLoading={props.isSubmitting}
+					loading={props.isSubmitting}
 				>
-					Delete
+					<AiFillDelete /> Delete
 				</Button>
 			)}
 
 			<Button
-				w="full"
 				size={fontSize}
-				className="hvr-rectangle-out"
-				leftIcon={<IoSave />}
 				variant="outline"
-				colorScheme="whatsapp"
-				isLoading={props.isSubmitting}
+				colorPalette="green"
+				loading={props.isSubmitting}
 				type="submit"
 			>
-				Save
+				<IoSave /> Save
 			</Button>
 		</Stack>
 	);
 };
 
-export const DropdownOptions = () => {
-	return (
-		<>
-			<option value="SWITCH">SWITCH</option>
-			<option value="FIREWALL">FIREWALL</option>
-			<option value="SERVER">SERVER</option>
-			<option value="OTHER">OTHER</option>
-		</>
-	);
-};
+export const DropdownOptions = [
+	{
+		device_type: "Printer",
+	},
+	{
+		device_type: "Scanner",
+	},
+	{
+		device_type: "Computer",
+	},
+	{
+		device_type: "Laptop",
+	},
+	{
+		device_type: "Mobile",
+	},
+	{
+		device_type: "Tablet",
+	},
+	{
+		device_type: "Other",
+	},
+];
 
 export const BackBtn = ({ router }) => (
 	<Button

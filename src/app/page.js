@@ -1,8 +1,8 @@
 import Show from "./(main)/ip/Show/Show";
-import { getData } from "@server/ip/actions";
+import { getIP } from "@server/ip/actions";
 
 export default async function Page() {
-	const { ip, devices, empTotal, devicesTotal } = await getData();
+	const { ip, devices, empTotal, devicesTotal } = await getIP();
 	return (
 		<Show
 			ip={ip}

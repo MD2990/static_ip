@@ -1,37 +1,37 @@
 import React from "react";
-
-import { IoChevronDownCircleOutline } from "react-icons/io5";
-import { useRouter } from "next/navigation";
+import { Button } from "@chakra-ui/react";
 import {
 	MenuContent,
 	MenuItem,
 	MenuRoot,
 	MenuTrigger,
-} from "@components/ui/menu";
-import { Button } from "@chakra-ui/react";
+} from "@/components/ui/menu";
+import { LuChevronDown } from "react-icons/lu";
+import Link from "next/link";
 
 export default function Menus({ title, children, total }) {
-	return null;
-	/* 	<MenuRoot>
-			<MenuTrigger asChild>
-				<MenuTrigger>
-					<Button variant="outline" size="sm">
-						<IoChevronDownCircleOutline />
-					</Button>
-				</MenuTrigger>
-				<MenuContent>{total || 0}</MenuContent>
-			</MenuTrigger>
-			<MenuItem>{children}</MenuItem>
-		</MenuRoot> */
-}
-export function MenuItems({ path, text, Icons }) {
-	const router = useRouter();
 	return (
-		<MenuItem minH="48px" onClick={() => router.push(path)}>
-			<Icons />
-			<Text as="span" pl="1">
-				{text}
-			</Text>
+		<MenuRoot>
+			<MenuTrigger asChild outline={"none"} fontSize={[12, 14, 16]}>
+				<Button variant="unstyled" size="sm">
+					{title} {total} <LuChevronDown />
+				</Button>
+			</MenuTrigger>
+			<MenuContent>{children}</MenuContent>
+		</MenuRoot>
+	);
+}
+export function MenuItems({ path, text }) {
+	return (
+		<MenuItem
+			asChild
+			value={path}
+			outline={"none"}
+			cursor={"pointer"}
+			color={"gray.700"}
+			_hover={{ color: "blue.500", fontWeight: "bold" }}
+		>
+			<Link href={path}>{text}</Link>
 		</MenuItem>
 	);
 }

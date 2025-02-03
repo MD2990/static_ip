@@ -1,9 +1,10 @@
 "use client";
-import { handleDelete, handlePut } from "@utils/dbConnect";
+import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
+import { VStack, Grid, GridItem, Separator } from "@chakra-ui/react";
 import {
+	CustomDropdown,
 	CustomField,
 	CustomTextArea,
 	FormBottomButton,
@@ -11,25 +12,18 @@ import {
 } from "@lib/Fields";
 import { Form, Formik } from "formik";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
-import { errorAlert, handleFormDelete } from "@lib/Alerts";
-import DropdownLists from "@app/(ips)/add_ip/DropdownLists";
+import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
+import DropdownLists from "../../add/DropdownLists";
+import { updateIP } from "@server/ip/actions";
 
 export default function Edit({ data, devices, emp }) {
 	const { location, device_type, added_by, _id, ip, notes } = data;
 	const router = useRouter();
-
 	async function put(values) {
 		try {
-			await handlePut({
-				values,
-				_id,
-				api: "/edit_ip/api",
-				field_name: values.ip,
-			}).then(() => {
-				setTimeout(() => {
-					router.back();
-				}, 500);
-			});
+			updateIP({ values, _id });
+			successAlert("IP Details Updated Successfully");
+			router.back();
 		} catch (error) {
 			errorAlert(error.message);
 		}
@@ -38,17 +32,14 @@ export default function Edit({ data, devices, emp }) {
 		await handleFormDelete({
 			handleDelete: () => {
 				handleDelete({ id: _id });
-
-				setTimeout(() => {
-					router.back();
-				}, 500);
+				router.back();
 			},
 		});
 	}
 
 	return (
-		<VStack m="2" p="2" justify={"center"}>
-			<Title title={"Edit"} />
+		<VStack m="2" p="2" justify={"center"} align={"center"} minH={"80dvh"}>
+			<Title title={`Edit: ${ip}`} />
 			<Formik
 				initialValues={{
 					location,
@@ -84,20 +75,35 @@ export default function Edit({ data, devices, emp }) {
 								</GridItem>
 
 								<GridItem>
-									<DropdownLists emp={emp} devices={devices} />
+									<CustomDropdown
+										fieldName="device_type"
+										labelName="Device Type"
+										arr={devices}
+										keys={"device_type"}
+									/>
+								</GridItem>
+								<GridItem>
+									<CustomDropdown
+										fieldName="added_by"
+										labelName="Added By"
+										arr={emp}
+										keys={"employee_name"}
+									/>
 								</GridItem>
 
 								<GridItem>
 									<CustomTextArea fieldName="notes" labelName="Notes" />
 								</GridItem>
 
-								<Divider color="gray.100" />
-								<FormBottomButton
-									router={router}
-									props={props}
-									deleteBtn
-									onDelete={onDelete}
-								/>
+								<Separator color="gray.100" mt="5" />
+								<GridItem>
+									<FormBottomButton
+										router={router}
+										props={props}
+										deleteBtn
+										onDelete={onDelete}
+									/>
+								</GridItem>
 							</Grid>
 						</Form>
 					);
