@@ -1,8 +1,9 @@
 import state from "@app/store";
-import { Input, Center } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useSnapshot } from "valtio";
+import { Box, Field, Input, defineStyle } from "@chakra-ui/react";
 
 const ClientSidePaginationAndSearch = ({
 	itemsPerPage = 5,
@@ -49,22 +50,50 @@ const ClientSidePaginationAndSearch = ({
 		// Reset to first page on new search
 		setCurrentPage(0);
 	};
+	const floatingStyles = defineStyle({
+		pos: "absolute",
+		bg: "bg",
+		px: "0.5",
+		top: "-3",
+		insetStart: "2",
+		fontWeight: "normal",
+		pointerEvents: "none",
+		transition: "position",
+		_peerPlaceholderShown: {
+			color: "gray.500",
+			top: "2.5",
+			insetStart: "3",
+		},
+		_peerFocusVisible: {
+			color: "blue.300",
+			top: "-3",
+			insetStart: "2",
+		},
+	});
 
 	return (
 		<>
 			<Center>
 				{data?.length > 0 && (
-					<Input
-						w="50%"
-						type="search"
-						placeholder={"Search By Any Field"}
-						value={snap.searchTerm}
-						onChange={handleSearchChange}
-						size={["sm", "md"]}
-						fontSize={["sm", "md"]}
-						mb="1rem"
-						textAlign={"center"}
-					/>
+					<Field.Root>
+						<Box pos="relative" w="50%" textAlign="center" alignSelf={"center"}>
+							<Input
+								className="peer"
+								placeholder=""
+								value={snap.searchTerm}
+								onChange={handleSearchChange}
+								size={["sm", "md"]}
+								fontSize={["sm", "md"]}
+								mb="1rem"
+								textAlign={"center"}
+								focusRingColor={"blue.400"}
+								rounded={"lg"}
+							/>
+							<Field.Label css={floatingStyles}>
+								Search By Any Field
+							</Field.Label>
+						</Box>
+					</Field.Root>
 				)}
 			</Center>
 			<Center>{renderItems(currentItems)} </Center>
