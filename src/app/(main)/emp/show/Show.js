@@ -33,12 +33,12 @@ export default function Show({ emp }) {
 			},
 		});
 	}, []);
-
+	//371
+	// admin91251
 	return (
 		<VStack spacing={4} align="center" justify="center" minH="60dvh">
 			<TopArea data={emp} path={"/emp/add"} title={"Add New Employee"} />
 			<PageTitle />
-
 			<Cards
 				data={emp}
 				deleteFunc={deleteFunc}

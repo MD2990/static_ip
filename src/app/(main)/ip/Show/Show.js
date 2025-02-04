@@ -2,22 +2,16 @@
 import state from "@app/store";
 import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
 import DataDisplay from "@lib/DataDisplay";
-import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import ClientSidePaginationAndSearch from "../ClientSidePaginationAndSearch";
 import SearchLabels from "@lib/SearchLabels";
-import { useSnapshot } from "valtio";
 import TopArea from "@lib/TopArea";
 import { deleteIP } from "@server/ip/actions";
-import { Center } from "@chakra-ui/react";
 
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
 	const ids = ip.map((e) => e._id);
-
-	const snap = useSnapshot(state);
-
 	const deleteFunc = useCallback(
 		async (e) => {
 			try {
