@@ -2,6 +2,28 @@ import React from "react";
 import { VStack, HStack, Text, Box, Button } from "@chakra-ui/react";
 
 const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
+	if (!data || data.length === 0) {
+		return (
+			<Box p={4} m={4} bg="white" w="full" boxShadow="lg" borderRadius="lg">
+				<Text
+					textAlign="center"
+					color="gray.600"
+					fontSize={["xl", "2xl", "3xl", "5xl"]}
+					p={6}
+					fontFamily="fantasy"
+					letterSpacing="8px"
+					textTransform="uppercase"
+					fontWeight="bold"
+					textShadow="0px 4px 12px rgba(0, 0, 0, 0.3)"
+					userSelect="none"
+					background="linear-gradient(to right, #2C5282, #63B3ED)"
+					backgroundClip="text"
+				>
+					No data available to display
+				</Text>
+			</Box>
+		);
+	}
 	return (
 		<Box
 			p={4}
@@ -51,7 +73,7 @@ const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
 					>
 						{Object.entries(dataRow)
 							.filter(([key]) => key !== "_id") // Exclude _id from display
-							.map(([key, value], idx) => (
+							.map(([_, value], idx) => (
 								<Box key={idx} w="20%" textAlign="left" color="gray.600">
 									{typeof value === "string" ? value : value}
 								</Box>

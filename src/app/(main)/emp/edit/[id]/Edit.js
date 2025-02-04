@@ -1,42 +1,40 @@
 "use client";
-import { handleDelete, handlePut } from "@utils/dbConnect";
+import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
+import { Separator, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { Form, Formik } from "formik";
 import { empValidationSchema } from "@lib/yupValidationSchema";
-import { errorAlert, handleFormDelete } from "@lib/Alerts";
+import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
+import { deleteEmp, updateEmp } from "@server/emp/actions";
 
-export default function Edit({ data }) {
-	const { employee_name, _id } = data;
+export default function Edit({ emp }) {
+	const { employee_name, _id } = emp;
 	const router = useRouter();
 
 	async function put(values) {
 		try {
-			await handlePut({
+			await updateEmp({
 				values,
 				_id,
-				api: "/edit_emp/api",
-				field_name: values.employee_name,
-			}).then(() => {
-				setTimeout(() => {
-					router.back();
-				}, 500);
 			});
+			successAlert("Employee details updated successfully");
+			router.back();
 		} catch (error) {
 			errorAlert(error.message);
 		}
 	}
 	async function onDelete() {
 		await handleFormDelete({
-			handleDelete: () => {
-				handleDelete({ api: `/edit_emp/api?id=${_id}` });
-
-				setTimeout(() => {
-					router.refresh();
+			handleDelete: async () => {
+				try {
+					await deleteEmp({ _id });
+					successAlert("Employee details deleted successfully");
 					router.back();
-				}, 500);
+				} catch (error) {
+					errorAlert(error.message);
+				}
 			},
 		});
 	}
@@ -51,7 +49,6 @@ export default function Edit({ data }) {
 				}}
 				onSubmit={async (values) => {
 					await put(values);
-					router.refresh();
 				}}
 				validationSchema={empValidationSchema}
 			>
@@ -73,7 +70,7 @@ export default function Edit({ data }) {
 									/>
 								</GridItem>
 
-								<Divider color="gray.100" />
+								<Separator color="gray.100" />
 
 								<GridItem>
 									<FormBottomButton

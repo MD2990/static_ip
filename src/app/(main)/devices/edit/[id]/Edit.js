@@ -2,7 +2,7 @@
 import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
+import { Separator, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { Form, Formik } from "formik";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
@@ -72,7 +72,7 @@ export default function Edit({ data }) {
 										labelName="Device Type"
 									/>
 								</GridItem>
-								<Divider color="gray.100" />
+								<Separator color="gray.100" />
 								<GridItem>
 									<FormBottomButton
 										router={router}

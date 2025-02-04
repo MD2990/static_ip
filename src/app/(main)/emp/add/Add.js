@@ -1,17 +1,27 @@
 "use client";
-import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Formik, Form } from "formik";
-import { Divider, VStack, Grid, GridItem } from "@chakra-ui/react";
+import { Separator, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { empValidationSchema } from "@lib/yupValidationSchema";
+import { addEmp } from "@server/emp/actions";
+import { errorAlert, successAlert } from "@lib/Alerts";
 
 export default function Add() {
 	const router = useRouter();
-
 	async function add(values) {
-		await post({ values, api: "/add_emp/api", name: values.employee_name });
+		try {
+			await addEmp({ values })
+				.then(() => {
+					successAlert("Employee Added Successfully");
+				})
+				.catch((err) => {
+					errorAlert(err.message);
+				});
+		} catch (error) {
+			errorAlert(error.message);
+		}
 	}
 
 	return (
@@ -47,7 +57,7 @@ export default function Add() {
 									/>
 								</GridItem>
 
-								<Divider borderColor={"gray.100"} />
+								<Separator borderColor={"gray.100"} />
 								<FormBottomButton router={router} props={props} />
 							</Grid>
 						</Form>

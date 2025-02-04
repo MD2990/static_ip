@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import {
 	HStack,
-	Divider,
+	Separator,
 	Button,
 	VStack,
 	Grid,
@@ -108,7 +108,7 @@ export default function Add({ data }) {
 									/>
 								</GridItem>
 
-								<Divider borderColor={"gray.100"} />
+								<Separator borderColor={"gray.100"} />
 
 								<FormBottomButton router={router} props={props} />
 							</Grid>

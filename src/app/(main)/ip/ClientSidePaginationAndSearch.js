@@ -42,7 +42,7 @@ const ClientSidePaginationAndSearch = ({
 	useEffect(() => {
 		// Show pagination if data is more than itemsPerPage after search filter applied or after render
 		setShowPagination(filteredData().length > itemsPerPage);
-	}, [filteredData, data]);
+	}, [filteredData().length, data.length]);
 
 	const handleSearchChange = (event) => {
 		//setSearchTerm(event.target.value);

@@ -2,7 +2,7 @@
 import React from "react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
-import {  VStack, Grid, GridItem, Separator } from "@chakra-ui/react";
+import { VStack, Grid, GridItem, Separator } from "@chakra-ui/react";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import {
 	CustomDropdown,
@@ -18,8 +18,13 @@ export default function Add({ emp, devices }) {
 	const router = useRouter();
 	async function add(values) {
 		try {
-			await addIP(values);
-			successAlert("IP Added Successfully");
+			await addIP(values)
+				.then(() => {
+					successAlert("IP Added Successfully");
+				})
+				.catch((err) => {
+					errorAlert(err.message);
+				});
 		} catch (error) {
 			errorAlert(error.message);
 		}

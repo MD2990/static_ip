@@ -10,6 +10,7 @@ import SearchLabels from "@lib/SearchLabels";
 import { useSnapshot } from "valtio";
 import TopArea from "@lib/TopArea";
 import { deleteIP } from "@server/ip/actions";
+import { Center } from "@chakra-ui/react";
 
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
@@ -64,12 +65,10 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	return (
 		<>
 			<TopArea data={ip} path={"/ip/add"} title={"Add New IP"}></TopArea>
-
 			<SearchLabels devices={devices} ip={ip} />
-
 			<ClientSidePaginationAndSearch
 				itemsPerPage={10}
-				data={snap.ip.map((e) => e)}
+				data={ip}
 				renderItems={(currentItems) => (
 					<DataDisplay
 						headers={headers}

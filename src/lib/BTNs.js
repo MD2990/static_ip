@@ -1,6 +1,5 @@
 import { IconButton } from "@chakra-ui/react";
 import React, { useTransition } from "react";
-import { LuLoaderCircle } from "react-icons/lu";
 
 export function TopBtn({ title, onClick, Icons }) {
 	const [isPending, startTransition] = useTransition();

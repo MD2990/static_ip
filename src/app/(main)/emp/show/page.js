@@ -1,6 +1,8 @@
-import React from "react";
-export const dynamic = "force-dynamic";
+import { getEmp } from "@server/emp/actions";
+import Show from "./Show";
 
-export default function page() {
-  return <></>;
+export default async function page() {
+	const emp = await getEmp();
+
+	return <Show emp={emp} />;
 }
