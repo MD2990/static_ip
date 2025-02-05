@@ -19,11 +19,8 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 					handleDelete: async () =>
 						deleteIP({ id: e })
 							.then(() => {
-								// filter out the deleted item
-								state.ip = state.ip.filter((item) => item._id !== e);
 								state.searchTerm = "";
 								successAlert("IP Deleted Successfully");
-								router.refresh();
 							})
 							.catch((error) => {
 								errorAlert(error.message);
@@ -32,7 +29,6 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 			} catch (error) {
 				errorAlert(error.message);
 			}
-			//router.refresh();
 		},
 		[router]
 	);
