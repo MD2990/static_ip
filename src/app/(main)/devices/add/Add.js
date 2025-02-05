@@ -13,80 +13,36 @@ import {
 } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
-import state from "@app/store";
-import { useSnapshot } from "valtio";
+import { addDevice } from "@server/devices/actions";
+import { errorAlert, successAlert } from "@lib/Alerts";
 
-export default function Add({ data }) {
+export default function Add() {
 	const router = useRouter();
-	const snap = useSnapshot(state);
 	async function add(values) {
-		await post({ values, api: "/add_device/api", name: values.device_type });
+		try {
+			await addDevice(values)
+				.then(() => {
+					successAlert("Device Added Successfully");
+				})
+				.catch((err) => {
+					errorAlert(err.message);
+				});
+		} catch (error) {
+			errorAlert(error.message);
+		}
 	}
 
-	useEffect(() => {
-		state.deviceDefaultValue = "";
-		return () => {
-			state.deviceDefaultValue = "";
-		};
-	}, []);
-
-	const devicesArray = [
-		"Printer",
-		"Switch",
-		"Router",
-		"Firewall",
-		"Access Point",
-		"Server",
-		"Storage",
-		"UPS",
-		"Other",
-	];
-
-	const filteredDevices = (device) =>
-		// return false if device is not in devices array
-		// return true if device is in devices array
-		data.some((d) => d.toLowerCase() === device.toLowerCase());
-
 	return (
-		<VStack minH="60vh" p="2" m="2" justify={"center"}>
-			<Title title={"Add Device"} />
-
-			<HStack
-				wrap={"wrap"}
-				spacing={4}
-				justify={"center"}
-				p="2"
-				m="2"
-				boxShadow={"lg"}
-				borderWidth="1px"
-				rounded={"sm"}
-			>
-				{devicesArray.map((device, i) => (
-					<Button
-						isDisabled={filteredDevices(device)}
-						size={"sm"}
-						key={i}
-						variant="solid"
-						colorScheme="telegram"
-						onClick={() => {
-							state.deviceDefaultValue = device;
-						}}
-					>
-						{device}
-					</Button>
-				))}
-			</HStack>
+		<VStack justify={"center"} minH="70vh">
+			<Title title="Add Device" />
 
 			<Formik
 				initialValues={{
-					device_type: snap.deviceDefaultValue,
+					device_type: "",
 				}}
-				enableReinitialize={true}
 				onSubmit={async (values, actions) => {
 					await add(values);
-					state.deviceDefaultValue = "";
 					actions.resetForm();
-					router.refresh();
 				}}
 				validationSchema={deviceValidationSchema}
 			>
@@ -109,7 +65,6 @@ export default function Add({ data }) {
 								</GridItem>
 
 								<Separator borderColor={"gray.100"} />
-
 								<FormBottomButton router={router} props={props} />
 							</Grid>
 						</Form>

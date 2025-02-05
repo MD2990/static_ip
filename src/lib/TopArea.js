@@ -57,12 +57,12 @@ export default function TopArea({ data, path, title }) {
 				/>
 			</Flex>
 
-			<Menus title="Employees" total={state.empTotal}>
+			<Menus title="Employees">
 				<MenuItems text="Add" path="/emp/add" Icons={FcBusinessman} />
 				<MenuItems text="Show" path="/emp/show" Icons={FcViewDetails} />
 			</Menus>
 
-			<Menus title="Devices" total={state.devicesTotal}>
+			<Menus title="Devices">
 				<MenuItems
 					text="Add"
 					path="devices/add"

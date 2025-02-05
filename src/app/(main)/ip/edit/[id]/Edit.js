@@ -13,7 +13,6 @@ import {
 import { Form, Formik } from "formik";
 import { ipValidationSchema } from "@lib/yupValidationSchema";
 import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
-import DropdownLists from "../../add/DropdownLists";
 import { deleteIP, updateIP } from "@server/ip/actions";
 
 export default function Edit({ data, devices, emp }) {

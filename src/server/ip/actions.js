@@ -87,6 +87,12 @@ export async function getEmpAndDevicesList() {
 export async function updateIP({ values, _id }) {
 	try {
 		await dbConnect();
+
+		if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
+			throw new Error("id is required");
+		}
+
+		// update ip
 		await IPS.findOneAndUpdate(
 			{ _id },
 			{ ...values, _id },
@@ -105,6 +111,14 @@ export async function updateIP({ values, _id }) {
 export async function addIP(values) {
 	try {
 		await dbConnect();
+		// check if ip already exists
+		const ipExists = await IPS.findOne({ ip: values.ip });
+		if (ipExists) {
+			throw new Error(`${values.ip} Already exist`);
+		}
+
+		// create ip
+
 		await IPS.create(values).catch((err) => {
 			throw new Error(err.message);
 		});

@@ -9,12 +9,12 @@ import {
 import { LuChevronDown } from "react-icons/lu";
 import Link from "next/link";
 
-export default function Menus({ title, children, total }) {
+export default function Menus({ title, children }) {
 	return (
 		<MenuRoot>
 			<MenuTrigger asChild outline={"none"} fontSize={[12, 14, 16]}>
 				<Button variant="unstyled" size="sm">
-					{title} {total} <LuChevronDown />
+					{title} <LuChevronDown />
 				</Button>
 			</MenuTrigger>
 			<MenuContent>{children}</MenuContent>

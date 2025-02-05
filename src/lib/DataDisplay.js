@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useTransition } from "react";
 import { VStack, HStack, Text, Box, Button } from "@chakra-ui/react";
 
 const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
+	const [isPending, startTransition] = useTransition();
+
 	if (!data || data.length === 0) {
 		return (
 			<Box p={4} m={4} bg="white" w="full" boxShadow="lg" borderRadius="lg">
@@ -82,14 +84,24 @@ const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
 							<Button
 								size={["sm", "md"]}
 								colorPalette="blue"
-								onClick={() => onEdit(ids[index])}
+								onClick={() => {
+									startTransition(() => {
+										onEdit(ids[index]);
+									});
+								}}
+								loading={isPending}
 							>
 								Edit
 							</Button>
 							<Button
 								size={["sm", "md"]}
+								loading={isPending}
 								colorPalette="red"
-								onClick={() => onDelete(ids[index])}
+								onClick={() => {
+									startTransition(() => {
+										onDelete(ids[index]);
+									});
+								}}
 							>
 								Delete
 							</Button>

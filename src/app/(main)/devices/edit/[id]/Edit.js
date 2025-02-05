@@ -1,49 +1,45 @@
 "use client";
-import { handleDelete, handlePut } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Separator, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { Form, Formik } from "formik";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
-import { errorAlert, handleFormDelete } from "@lib/Alerts";
+import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
+import { deleteDevice, updateDevice } from "@server/devices/actions";
 
-export default function Edit({ data }) {
-	const { device_type, _id } = data;
+export default function Edit({ device }) {
+	const { device_type, _id } = device;
 	const router = useRouter();
-
 	async function put(values) {
 		try {
-			await handlePut({
+			await updateDevice({
 				values,
 				_id,
-				api: "/edit_device/api",
-				field_name: values.device_type,
-			}).then(() => {
-				setTimeout(() => {
-					router.back();
-				}, 500);
 			});
+			successAlert("Device details updated successfully");
+			router.back();
 		} catch (error) {
 			errorAlert(error.message);
 		}
 	}
 	async function onDelete() {
 		await handleFormDelete({
-			handleDelete: () => {
-				handleDelete({ api: `/edit_device/api?id=${_id}` });
-
-				setTimeout(() => {
-					router.refresh();
+			handleDelete: async () => {
+				try {
+					await deleteDevice({ _id });
+					successAlert("Device deleted successfully");
 					router.back();
-				}, 500);
+				} catch (error) {
+					errorAlert(error.message);
+				}
 			},
 		});
 	}
 
 	return (
-		<VStack minH="70vh" p="2" m="2" justify={"center"}>
-			<Title title={"Edit Device Details"} />
+		<VStack m="2" p="2" minH="70vh" justify={"center"}>
+			<Title title={"Edit Device"} />
 
 			<Formik
 				initialValues={{
@@ -51,7 +47,6 @@ export default function Edit({ data }) {
 				}}
 				onSubmit={async (values) => {
 					await put(values);
-					router.refresh();
 				}}
 				validationSchema={deviceValidationSchema}
 			>
@@ -72,7 +67,9 @@ export default function Edit({ data }) {
 										labelName="Device Type"
 									/>
 								</GridItem>
+
 								<Separator color="gray.100" />
+
 								<GridItem>
 									<FormBottomButton
 										router={router}
