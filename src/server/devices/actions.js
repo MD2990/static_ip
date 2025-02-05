@@ -50,7 +50,6 @@ export async function updateDevice({ _id, values }) {
 
 		// check if device exists
 		const cleanDevice = await sanitizeDeviceType(values.device_type);
-		console.log(cleanDevice);
 		const device = await DEVICES.findByIdAndUpdate(
 			_id,
 			{ device_type: cleanDevice },

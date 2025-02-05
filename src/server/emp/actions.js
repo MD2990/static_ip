@@ -77,8 +77,6 @@ export async function deleteEmp({ _id }) {
 		revalidatePath("/emp/show");
 		return true;
 	} catch (error) {
-		console.log(error);
-
 		throw new Error(error.message);
 	}
 }

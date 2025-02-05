@@ -12,33 +12,30 @@ import { deleteIP } from "@server/ip/actions";
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
 	const ids = ip.map((e) => e._id);
-	const deleteFunc = useCallback(
-		async (e) => {
-			try {
-				await handleFormDelete({
-					handleDelete: async () =>
-						deleteIP({ id: e })
-							.then(() => {
-								state.searchTerm = "";
-								successAlert("IP Deleted Successfully");
-							})
-							.catch((error) => {
-								errorAlert(error.message);
-							}),
-				});
-			} catch (error) {
-				errorAlert(error.message);
-			}
-		},
-		[router]
-	);
+	const deleteFunc = useCallback(async (e) => {
+		try {
+			await handleFormDelete({
+				handleDelete: async () =>
+					deleteIP({ id: e })
+						.then(() => {
+							state.searchTerm = "";
+							successAlert("IP Deleted Successfully");
+						})
+						.catch((error) => {
+							errorAlert(error.message);
+						}),
+			});
+		} catch (error) {
+			errorAlert(error.message);
+		}
+	}, []);
 
 	useEffect(() => {
 		state.ip = ip;
 		state.title = "IP Addresses";
 		state.empTotal = empTotal;
 		state.devicesTotal = devicesTotal;
-	}, []);
+	}, [ip, empTotal, devicesTotal]);
 
 	const filteredData = ["_id"];
 	const headers =

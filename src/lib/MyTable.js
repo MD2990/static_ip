@@ -1,19 +1,10 @@
 import React from "react";
-
 import Link from "next/link";
 import { useSnapshot } from "valtio";
 import state from "@app/store";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { IconButton, Table, TableCaption } from "@chakra-ui/react";
-function MyTable({
-	size = "sm",
-	data,
-	tableTitle,
-	deleteFunc,
-	tableHeads,
-	tableRows,
-	editFunc,
-}) {
+import { IconButton, Table } from "@chakra-ui/react";
+function MyTable({ data, deleteFunc, tableHeads, tableRows, editFunc }) {
 	const TheTable = () => {
 		const snap = useSnapshot(state);
 
@@ -89,26 +80,6 @@ function MyTable({
 	};
 
 	return <TheTable />;
-	{
-		/* <Table.Root variant="striped">
-			<TableCaption
-				userSelect={"none"}
-				placement="top"
-				fontSize={["xl", "2xl", "3xl", "5xl"]}
-				textDecoration="underline"
-				textShadow={`0px 0px 10px #d0d9d2`}
-			>
-				<Text
-					as={"span"}
-					textDecoration="underline"
-					fontSize={["2xl", "4xl", "5xl"]}
-				>
-					{tableTitle}
-				</Text>
-			</TableCaption> */
-	}
-
-	/* 	</Table.Root> */
 }
 
 export default MyTable;

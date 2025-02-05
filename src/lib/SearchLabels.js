@@ -1,5 +1,5 @@
 import state from "@app/store";
-import { Button, HStack, Flex, Text, Box, IconButton } from "@chakra-ui/react";
+import {  HStack, Flex, Text, Box, IconButton } from "@chakra-ui/react";
 import React from "react";
 import { LuX } from "react-icons/lu";
 import { useSnapshot } from "valtio";

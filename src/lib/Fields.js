@@ -7,7 +7,6 @@ import {
 	Input,
 	Textarea,
 	Button,
-	createListCollection,
 } from "@chakra-ui/react";
 import { Field as FormikField } from "formik";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -20,19 +19,11 @@ import {
 	NativeSelectRoot,
 } from "@/components/ui/native-select";
 
-import { FormControl, Spinner, Text, HStack, Box } from "@chakra-ui/react";
+import { Spinner, Text, HStack } from "@chakra-ui/react";
 import { BiArrowBack } from "react-icons/bi";
 
 import { FcPrint } from "react-icons/fc";
 import { Skeleton, SkeletonCircle } from "@components/ui/skeleton";
-import {
-	SelectContent,
-	SelectItem,
-	SelectLabel,
-	SelectRoot,
-	SelectTrigger,
-	SelectValueText,
-} from "@/components/ui/select";
 export function Title({ title, children }) {
 	return (
 		<Center>
@@ -163,7 +154,7 @@ export const CustomTextArea = ({ fieldName, labelName }) => {
 export const CustomDropdown = ({ fieldName, labelName, arr = [], keys }) => {
 	return (
 		<FormikField name={fieldName}>
-			{({ field, meta, form }) => (
+			{({ field, meta }) => (
 				<Field
 					mt="2"
 					label={labelName}

@@ -1,5 +1,4 @@
 "use client";
-import { handleDelete } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { VStack, Grid, GridItem, Separator } from "@chakra-ui/react";

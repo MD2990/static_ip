@@ -1,16 +1,8 @@
 "use client";
-import { post } from "@utils/dbConnect";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
-import {
-	HStack,
-	Separator,
-	Button,
-	VStack,
-	Grid,
-	GridItem,
-} from "@chakra-ui/react";
+import { Separator, VStack, Grid, GridItem } from "@chakra-ui/react";
 import { CustomField, FormBottomButton, Title } from "@lib/Fields";
 import { deviceValidationSchema } from "@lib/yupValidationSchema";
 import { addDevice } from "@server/devices/actions";
