@@ -1,15 +1,18 @@
 import { getIpById, getEmpAndDevicesList } from "@server/ip/actions";
 import Edit from "./Edit";
-import { notFound } from "next/navigation";
+import Error from "@app/error";
 
 export default async function page({ params }) {
 	const { id } = await params;
-	const { ip } = await getIpById(id);
+	const { ip, success, error } = await getIpById(id);
 
-	if (!id || !ip) {
-		return notFound();
+	if (!id || !ip || !success || error) {
+		return <Error />;
 	}
 
-	const { devices, emp } = await getEmpAndDevicesList();
+	const { devices, emp, success: suc } = await getEmpAndDevicesList();
+	if (!suc) {
+		return <Error />;
+	}
 	return <Edit data={ip} devices={devices} emp={emp} />;
 }

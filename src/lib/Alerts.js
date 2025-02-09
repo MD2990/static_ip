@@ -24,7 +24,7 @@ export function successAlert(msg = "Deleted successfully") {
 		timerProgressBar: true,
 		title: msg,
 		showConfirmButton: false,
-		timer: 2000,
+		timer: 2500,
 	});
 }
 
@@ -33,7 +33,7 @@ export function errorAlert(msg = "Something went wrong! Please try Again") {
 		icon: "error",
 		title: "Oops...",
 		text: msg,
-		timer: 2000,
+		timer: 4000,
 		timerProgressBar: true,
 	});
 }

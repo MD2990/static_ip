@@ -3,7 +3,7 @@ import state from "@app/store";
 import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
 import DataDisplay from "@lib/DataDisplay";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import ClientSidePaginationAndSearch from "../ClientSidePaginationAndSearch";
 import SearchLabels from "@lib/SearchLabels";
 import TopArea from "@lib/TopArea";
@@ -12,23 +12,18 @@ import { deleteIP } from "@server/ip/actions";
 export default function Show({ ip, devices, empTotal, devicesTotal }) {
 	const router = useRouter();
 	const ids = ip.map((e) => e._id);
-	const deleteFunc = useCallback(async (e) => {
-		try {
-			await handleFormDelete({
-				handleDelete: async () =>
-					deleteIP({ id: e })
-						.then(() => {
-							state.searchTerm = "";
-							successAlert("IP Deleted Successfully");
-						})
-						.catch((error) => {
-							errorAlert(error.message);
-						}),
-			});
-		} catch (error) {
-			errorAlert(error.message);
-		}
-	}, []);
+	const deleteFunc = async (e) => {
+		await handleFormDelete({
+			handleDelete: async () => {
+				const { success, message, error } = await deleteIP({ id: e });
+				if (!success || error) {
+					errorAlert(error || "Failed to delete IP");
+					return;
+				}
+				successAlert(message || `${ip} Deleted Successfully`);
+			},
+		});
+	};
 
 	useEffect(() => {
 		state.ip = ip;

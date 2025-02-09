@@ -18,15 +18,17 @@ export default function Add({ emp, devices }) {
 	const router = useRouter();
 	async function add(values) {
 		try {
-			await addIP(values)
-				.then(() => {
-					successAlert("IP Added Successfully");
-				})
-				.catch((err) => {
-					errorAlert(err.message);
-				});
+			const { success, error, message } = await addIP(values);
+			if (!success) {
+				errorAlert(error);
+				return false;
+			}
+			successAlert(message);
+			router.back();
+			return true;
 		} catch (error) {
 			errorAlert(error.message);
+			return false;
 		}
 	}
 

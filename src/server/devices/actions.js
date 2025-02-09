@@ -1,7 +1,7 @@
 "use server";
 import { dbConnect } from "@app/dbConnect";
 import { convertDate } from "@lib/helpers";
-import DEVICES from "@models/ips/DEVICES";
+import DEVICES from "@models/DEVICES";
 import { revalidatePath } from "next/cache";
 
 // get devices

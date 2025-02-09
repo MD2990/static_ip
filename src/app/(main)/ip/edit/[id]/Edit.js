@@ -19,8 +19,12 @@ export default function Edit({ data, devices, emp }) {
 	const router = useRouter();
 	async function put(values) {
 		try {
-			await updateIP({ values, _id });
-			successAlert("IP Details Updated Successfully");
+			const { success, error, message } = await updateIP({ values, _id });
+			if (!success) {
+				errorAlert(error);
+				return;
+			}
+			successAlert(message || `${values?.ip} Updated Successfully`);
 			router.back();
 		} catch (error) {
 			errorAlert(error.message);
@@ -29,8 +33,12 @@ export default function Edit({ data, devices, emp }) {
 	async function onDelete() {
 		await handleFormDelete({
 			handleDelete: async () => {
-				await deleteIP({ id: _id });
-				successAlert("IP Deleted Successfully");
+				const { success, message, error } = await deleteIP({ id: _id });
+				if (!success || error) {
+					errorAlert(error || "Failed to delete IP");
+					return;
+				}
+				successAlert(message || `${ip} Deleted Successfully`);
 				router.back();
 			},
 		});
