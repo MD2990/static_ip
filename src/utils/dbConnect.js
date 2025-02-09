@@ -1,58 +1,7 @@
 /* eslint-disable no-unused-vars */
-import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getDateTime } from "../lib/helpers";
-import { errorAlert, successAlert } from "@lib/Alerts";
-import { addIP } from "@server/ip/actions";
-
-export async function post({ values }) {
-	await addIP({ values });
-}
-
-export const handlePut = async ({
-	values,
-	_id,
-	msgs = true,
-	api,
-	field_name,
-}) => {
-	const contentType = "application/json";
-
-	try {
-		const res = await fetch(`${api}?id=${_id}`, {
-			method: "PUT",
-			headers: {
-				Accept: contentType,
-				"Content-Type": contentType,
-			},
-			body: JSON.stringify({ ...values, _id }),
-		});
-
-		// Throw error with status code in case Fetch API req failed
-		if (res.ok && msgs) return successAlert("Updated Successfully");
-
-		if (res.status === 409) {
-			return errorAlert(`🚫 ${field_name} Already exist...`);
-		}
-
-		if (!res.ok) return errorAlert();
-	} catch (error) {
-		errorAlert(error); // show error msg regardless of users choice
-	}
-};
-
-export const handleDelete = async ({ api, msgs = true }) => {
-	try {
-		const res = await axios.delete(api);
-
-		if (res.status === 200 && msgs) {
-			successAlert("Deleted Successfully");
-		}
-	} catch (error) {
-		errorAlert();
-	}
-};
 
 export const toPDF = ({
 	rows,
