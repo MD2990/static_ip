@@ -32,10 +32,11 @@ export async function getIP() {
 		);
 
 		return {
-			ip: data.ip,
-			devices: data.devices,
-			empTotal: data.empTotal,
-			devicesTotal: data.devicesTotal,
+			ip: data.ip || [],
+			devices: data.devices || [],
+			empTotal: data.empTotal || 0,
+			devicesTotal: data.devicesTotal || 0,
+			success: true,
 		};
 	} catch (error) {
 		return {

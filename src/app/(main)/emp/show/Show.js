@@ -21,20 +21,22 @@ export default function Show({ emp }) {
 	}, [emp]);
 
 	// create delete Function
-	const deleteFunc = useCallback(async (e) => {
+	const deleteFunc = async (e) => {
 		await handleFormDelete({
 			handleDelete: async () => {
 				try {
-					await deleteEmp({ _id: e });
-					successAlert("Employee details deleted successfully");
+					const { success, message, error } = await deleteEmp({ _id: e });
+					if (!success || error) {
+						errorAlert(error || "Failed to delete Employee");
+						return;
+					}
+					successAlert(message);
 				} catch (error) {
-					errorAlert(error.message);
+					errorAlert(error.message || "Failed to delete Employee");
 				}
 			},
 		});
-	}, []);
-	//371
-	// admin91251
+	};
 	return (
 		<VStack spacing={4} align="center" justify="center" minH="60dvh">
 			<TopArea data={emp} path={"/emp/add"} title={"Add New Employee"} />

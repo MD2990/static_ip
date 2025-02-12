@@ -31,9 +31,12 @@ export function successAlert(msg = "Deleted successfully") {
 export function errorAlert(msg = "Something went wrong! Please try Again") {
 	Swal.fire({
 		icon: "error",
-		title: "Oops...",
+		title: "Error",
 		text: msg,
-		timer: 4000,
+		toast: true,
+		position: "top-end",
+		showConfirmButton: false,
+		timer: 3500,
 		timerProgressBar: true,
 	});
 }

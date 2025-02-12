@@ -10,7 +10,7 @@ import { deleteDevice } from "@server/devices/actions";
 
 export default function Show({ device }) {
 	useEffect(() => {
-		state.title = "Devices";
+		state.title = "All Devices";
 		state.devicesTotal = device.length;
 		state.searchResults = device;
 
@@ -35,7 +35,7 @@ export default function Show({ device }) {
 	}, []);
 	return (
 		<VStack spacing={4} align="center" justify="center" minH="60dvh">
-			<TopArea data={device} path={"/devices/add"} title={"Add New Employee"} />
+			<TopArea data={device} path={"/devices/add"} title={"Add New Device"} />
 			<PageTitle />
 			<Cards
 				data={device}

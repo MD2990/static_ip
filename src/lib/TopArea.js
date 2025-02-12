@@ -57,19 +57,19 @@ export default function TopArea({ data, path, title }) {
 				/>
 			</Flex>
 
+			<Menus title="Devices">
+				<MenuItems
+					text="Add"
+					path="/devices/add"
+					Icons={FcMultipleSmartphones}
+				/>
+				<MenuItems text="Show" path="/devices/show" Icons={FcViewDetails} />
+			</Menus>
 			<Menus title="Employees">
 				<MenuItems text="Add" path="/emp/add" Icons={FcBusinessman} />
 				<MenuItems text="Show" path="/emp/show" Icons={FcViewDetails} />
 			</Menus>
 
-			<Menus title="Devices">
-				<MenuItems
-					text="Add"
-					path="devices/add"
-					Icons={FcMultipleSmartphones}
-				/>
-				<MenuItems text="Show" path="/devices/show" Icons={FcViewDetails} />
-			</Menus>
 			<Flex align="flex-start" userSelect={"none"}>
 				<Stat.Root>
 					<Stat.Label

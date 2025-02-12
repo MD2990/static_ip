@@ -1,6 +1,5 @@
 import Add from "./Add";
 
-export default async function page() {
-
+export default function page() {
 	return <Add />;
 }

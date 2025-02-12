@@ -12,13 +12,12 @@ export default function Add() {
 	const router = useRouter();
 	async function add(values) {
 		try {
-			await addEmp({ values })
-				.then(() => {
-					successAlert("Employee Added Successfully");
-				})
-				.catch((err) => {
-					errorAlert(err.message);
-				});
+			const { success, error, message } = await addEmp({ values });
+			if (!success || error) {
+				errorAlert(error);
+				return;
+			}
+			successAlert(message);
 		} catch (error) {
 			errorAlert(error.message);
 		}

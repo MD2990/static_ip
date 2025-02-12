@@ -1,29 +1,40 @@
 "use server";
 import { dbConnect } from "@app/dbConnect";
 import { convertDate } from "@lib/helpers";
-import EMP from "@models/ips/EMP";
+import EMP from "@models/EMP";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 // get all employees
 export async function getEmp() {
 	try {
 		await dbConnect();
-
 		let data = await EMP.find({}).sort({ updatedAt: -1 });
 		if (!data) {
-			throw new Error("No data found");
+			return {
+				success: false,
+				error: "No Employees found",
+			};
 		}
 
 		data = convertDate(data);
 		const emp = JSON.parse(JSON.stringify(data));
 
 		if (!emp) {
-			throw new Error("No data found");
+			return {
+				success: false,
+				error: "No Employees found",
+			};
 		}
 
-		return emp;
+		return {
+			success: true,
+			emp: emp || [],
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to get Employees",
+		};
 	}
 }
 
@@ -33,18 +44,26 @@ export async function getEmpById(id) {
 		await dbConnect();
 
 		if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-			throw new Error("id is required");
+			return {
+				success: false,
+				error: "Invalid ID provided",
+			};
+		}
+		const data = await EMP.findById(id);
+		if (!data) {
+			return {
+				success: false,
+				error: "Employee not found",
+			};
 		}
 
-		const data = await EMP.findById(id).catch((err) => {
-			throw new Error(err.message);
-		});
-
 		const emp = JSON.parse(JSON.stringify(data));
-
 		return emp;
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to get Employee",
+		};
 	}
 }
 
@@ -52,17 +71,29 @@ export async function getEmpById(id) {
 export async function updateEmp({ values, _id }) {
 	try {
 		await dbConnect();
-		await EMP.findOneAndUpdate(
+		const emp = await EMP.findOneAndUpdate(
 			{ _id },
 			{ ...values, _id },
 			{ new: true }
-		).catch((err) => {
-			throw new Error(err.message);
-		});
+		);
+
+		if (!emp) {
+			return {
+				success: false,
+				error: "Employee not found",
+			};
+		}
+
 		revalidatePath("/emp/show");
-		return true;
+		return {
+			success: true,
+			message: `${values?.employee_name?.toUpperCase()} Updated Successfully`,
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to update Employee",
+		};
 	}
 }
 
@@ -70,14 +101,25 @@ export async function updateEmp({ values, _id }) {
 export async function deleteEmp({ _id }) {
 	try {
 		await dbConnect();
-		await EMP.findByIdAndDelete(_id).catch((err) => {
-			throw new Error(err.message);
-		});
+		const emp = await EMP.findByIdAndDelete(_id);
+
+		if (!emp) {
+			return {
+				success: false,
+				error: "Employee not found",
+			};
+		}
 
 		revalidatePath("/emp/show");
-		return true;
+		return {
+			success: true,
+			message: `${emp.employee_name} Deleted Successfully`,
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to delete Employee",
+		};
 	}
 }
 
@@ -85,13 +127,35 @@ export async function deleteEmp({ _id }) {
 export async function addEmp({ values }) {
 	try {
 		await dbConnect();
-		await EMP.create(values).catch((err) => {
-			throw new Error(err.message);
+		// check if employee already exists
+		const existingEmp = await EMP.findOne({
+			employee_name: { $regex: new RegExp(`^${values?.employee_name}$`, "i") },
 		});
 
+		if (existingEmp) {
+			return {
+				success: false,
+				error: `Employee ${values?.employee_name?.toUpperCase()} already exists`,
+			};
+		}
+		const emp = await EMP.create(values);
+
+		if (!emp) {
+			return {
+				success: false,
+				error: "Failed to add Employee",
+			};
+		}
+
 		revalidatePath("/emp/show");
-		return true;
+		return {
+			success: true,
+			message: `${values?.employee_name?.toUpperCase()} Added Successfully`,
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: "Employee already exists",
+		};
 	}
 }

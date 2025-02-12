@@ -12,13 +12,12 @@ export default function Add() {
 	const router = useRouter();
 	async function add(values) {
 		try {
-			await addDevice(values)
-				.then(() => {
-					successAlert("Device Added Successfully");
-				})
-				.catch((err) => {
-					errorAlert(err.message);
-				});
+			const { success, error, message } = await addDevice(values);
+			if (!success || error) {
+				errorAlert(error);
+				return;
+			}
+			successAlert(message);
 		} catch (error) {
 			errorAlert(error.message);
 		}

@@ -11,7 +11,10 @@ export async function getDevices() {
 		// get only unique device types
 		let data = await DEVICES.find({}, "-__v").sort({ createdAt: -1 });
 		if (!data) {
-			throw new Error("No data found");
+			return {
+				success: false,
+				error: "No Devices found",
+			};
 		}
 
 		// convert date
@@ -20,11 +23,20 @@ export async function getDevices() {
 		const devices = JSON.parse(JSON.stringify(data));
 
 		if (!devices) {
-			throw new Error("No data found");
+			return {
+				success: false,
+				error: "No Devices found",
+			};
 		}
-		return devices;
+		return {
+			success: true,
+			device: devices || [],
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to get Devices",
+		};
 	}
 }
 
@@ -33,13 +45,22 @@ export async function deleteDevice(id) {
 	try {
 		await dbConnect();
 		const device = await DEVICES.findByIdAndDelete(id);
-		if (!device) {
-			throw new Error("Device not found");
-		}
+		if (!device)
+			return {
+				success: false,
+				error: "Device not found",
+			};
+
 		revalidatePath("/devices/show");
-		return true;
+		return {
+			success: true,
+			message: "Device deleted successfully",
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: "Failed to delete device",
+		};
 	}
 }
 
@@ -52,44 +73,72 @@ export async function updateDevice({ _id, values }) {
 		const cleanDevice = await sanitizeDeviceType(values.device_type);
 		const device = await DEVICES.findByIdAndUpdate(
 			_id,
-			{ device_type: cleanDevice },
+			{ device_type: values.device_type },
 			{
 				new: true,
 				runValidators: true,
 			}
 		);
 		if (!device) {
-			throw new Error("Device not found");
+			return {
+				success: false,
+				error: "Device not found",
+			};
 		}
+
 		revalidatePath("/devices/show");
-		return true;
+		return {
+			success: true,
+			message: `${values.device_type} updated successfully`,
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: "Failed to update device",
+		};
 	}
 }
-
 // add device
 export async function addDevice(data) {
+
+
 	try {
 		await dbConnect();
 		const { device_type } = data || {};
 
 		// Validate and clean device_type
-		const cleanDeviceType = await sanitizeDeviceType(device_type);
+		const { device_type: cleanDeviceType } = await sanitizeDeviceType(
+			device_type
+		);
 
 		// Create new device with cleaned data
 		const device = new DEVICES({ device_type: cleanDeviceType });
-		await device.save();
+		const addDevice = await device.save();
+		if (!addDevice) {
+			return {
+				success: false,
+				error: "Failed to add device",
+			};
+		}
 		revalidatePath("/devices/show");
-		return true;
+		return {
+			success: true,
+			message: `${cleanDeviceType} added successfully`,
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: error.message || "Failed to add device",
+		};
 	}
 }
 
 async function sanitizeDeviceType(device_type) {
 	if (!device_type || typeof device_type !== "string") {
-		throw new Error("Device is required");
+		return {
+			success: false,
+			error: "Device is required",
+		};
 	}
 
 	// Clean the device type (trim and uppercase)
@@ -97,13 +146,19 @@ async function sanitizeDeviceType(device_type) {
 
 	// Validate empty string after trim
 	if (cleanDeviceType.length === 0) {
-		throw new Error("Device cannot be empty");
+		return {
+			success: false,
+			error: "Device type is required",
+		};
 	}
 
 	// Optional: Check for special characters
 	const specialCharsRegex = /[!+-@#$%^&*(),.?":{}|<>]/;
 	if (specialCharsRegex.test(cleanDeviceType)) {
-		throw new Error("Device cannot contain special characters");
+		return {
+			success: false,
+			error: "Special characters are not allowed",
+		};
 	}
 
 	// Check if device with same device_type exists (case insensitive)
@@ -112,9 +167,15 @@ async function sanitizeDeviceType(device_type) {
 	});
 
 	if (existingDevice) {
-		throw new Error("Device already exists");
+		return {
+			success: false,
+			error: `Device type ${cleanDeviceType} already exists`,
+		};
 	}
-	return cleanDeviceType;
+	return {
+		success: true,
+		device_type: cleanDeviceType,
+	};
 }
 
 // get device by id
@@ -123,11 +184,20 @@ export async function getDeviceById(id) {
 		await dbConnect();
 		const data = await DEVICES.findOne({ _id: id });
 		if (!data) {
-			throw new Error("Device not found");
+			return {
+				success: false,
+				error: "Device not found",
+			};
 		}
 		const device = JSON.parse(JSON.stringify(data));
-		return device;
+		return {
+			success: true,
+			device: device || {},
+		};
 	} catch (error) {
-		throw new Error(error.message);
+		return {
+			success: false,
+			error: "Failed to get Device",
+		};
 	}
 }

@@ -14,25 +14,33 @@ export default function Edit({ emp }) {
 
 	async function put(values) {
 		try {
-			await updateEmp({
-				values,
-				_id,
-			});
-			successAlert("Employee details updated successfully");
+			const { success, error, message } = await updateEmp({ values, _id });
+			if (!success || error) {
+				errorAlert(error || "Failed to update Employee");
+				return;
+			}
+
+			successAlert(
+				message || `${values?.employee_name.toUpperCase()} Updated Successfully`
+			);
 			router.back();
 		} catch (error) {
-			errorAlert(error.message);
+			errorAlert(error.message || "Failed to update Employee");
 		}
 	}
 	async function onDelete() {
 		await handleFormDelete({
 			handleDelete: async () => {
 				try {
-					await deleteEmp({ _id });
-					successAlert("Employee details deleted successfully");
+					const { success, message, error } = await deleteEmp({ _id });
+					if (!success || error) {
+						errorAlert(error || "Failed to delete Employee");
+						return;
+					}
+					successAlert(message);
 					router.back();
 				} catch (error) {
-					errorAlert(error.message);
+					errorAlert(error.message || "Failed to delete Employee");
 				}
 			},
 		});

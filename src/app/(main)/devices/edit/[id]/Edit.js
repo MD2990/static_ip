@@ -13,11 +13,15 @@ export default function Edit({ device }) {
 	const router = useRouter();
 	async function put(values) {
 		try {
-			await updateDevice({
+			const { success, error, message } = await updateDevice({
 				values,
 				_id,
 			});
-			successAlert("Device details updated successfully");
+			if (!success || error) {
+				errorAlert(error);
+				return;
+			}
+			successAlert(message);
 			router.back();
 		} catch (error) {
 			errorAlert(error.message);
@@ -27,8 +31,12 @@ export default function Edit({ device }) {
 		await handleFormDelete({
 			handleDelete: async () => {
 				try {
-					await deleteDevice({ _id });
-					successAlert("Device deleted successfully");
+					const { success, error, message } = await deleteDevice({ _id });
+					if (!success || error) {
+						errorAlert(error);
+						return;
+					}
+					successAlert(message);
 					router.back();
 				} catch (error) {
 					errorAlert(error.message);
