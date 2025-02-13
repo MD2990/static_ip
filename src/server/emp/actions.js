@@ -58,7 +58,10 @@ export async function getEmpById(id) {
 		}
 
 		const emp = JSON.parse(JSON.stringify(data));
-		return emp;
+		return {
+			emp,
+			success: true,
+		};
 	} catch (error) {
 		return {
 			success: false,

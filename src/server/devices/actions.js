@@ -70,10 +70,20 @@ export async function updateDevice({ _id, values }) {
 		await dbConnect();
 
 		// check if device exists
-		const cleanDevice = await sanitizeDeviceType(values.device_type);
+		const { success, device_type, error } = await sanitizeDeviceType(
+			values.device_type
+		);
+
+		if (!success || error) {
+			return {
+				success: false,
+				error: error,
+			};
+		}
+
 		const device = await DEVICES.findByIdAndUpdate(
 			_id,
-			{ device_type: values.device_type },
+			{ device_type },
 			{
 				new: true,
 				runValidators: true,
@@ -89,7 +99,7 @@ export async function updateDevice({ _id, values }) {
 		revalidatePath("/devices/show");
 		return {
 			success: true,
-			message: `${values.device_type} updated successfully`,
+			message: `${device_type} updated successfully`,
 		};
 	} catch (error) {
 		return {
@@ -100,30 +110,39 @@ export async function updateDevice({ _id, values }) {
 }
 // add device
 export async function addDevice(data) {
-
-
 	try {
 		await dbConnect();
-		const { device_type } = data || {};
+		const { device_type: deviceType } = data || {};
 
 		// Validate and clean device_type
-		const { device_type: cleanDeviceType } = await sanitizeDeviceType(
-			device_type
+		const { success, device_type, error } = await sanitizeDeviceType(
+			deviceType
 		);
 
+		if (!success || error) {
+			return {
+				success: false,
+				error: error,
+			};
+		}
+
 		// Create new device with cleaned data
-		const device = new DEVICES({ device_type: cleanDeviceType });
-		const addDevice = await device.save();
-		if (!addDevice) {
+		const device = new DEVICES({
+			device_type,
+		});
+
+		const addedDevice = await device.save();
+		if (!addedDevice) {
 			return {
 				success: false,
 				error: "Failed to add device",
 			};
 		}
+
 		revalidatePath("/devices/show");
 		return {
 			success: true,
-			message: `${cleanDeviceType} added successfully`,
+			message: `${device_type} added successfully`,
 		};
 	} catch (error) {
 		return {
@@ -143,7 +162,6 @@ async function sanitizeDeviceType(device_type) {
 
 	// Clean the device type (trim and uppercase)
 	const cleanDeviceType = device_type.trim().toUpperCase();
-
 	// Validate empty string after trim
 	if (cleanDeviceType.length === 0) {
 		return {

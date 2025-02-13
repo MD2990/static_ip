@@ -11,7 +11,10 @@ export default async function Page({ params }) {
 		return notFound;
 	}
 
-	const emp = await getEmpById(id);
+	const { success, emp, error } = await getEmpById(id);
+	if (error || !success) {
+		return <Error />;
+	}
 
 	return <Edit emp={emp} />;
 }

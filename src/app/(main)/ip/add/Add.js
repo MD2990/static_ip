@@ -21,14 +21,11 @@ export default function Add({ emp, devices }) {
 			const { success, error, message } = await addIP(values);
 			if (!success) {
 				errorAlert(error);
-				return false;
+				return;
 			}
 			successAlert(message);
-			router.back();
-			return true;
 		} catch (error) {
 			errorAlert(error.message);
-			return false;
 		}
 	}
 

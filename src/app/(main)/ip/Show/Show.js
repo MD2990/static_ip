@@ -24,7 +24,10 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 			},
 		});
 	};
-
+	/* 	useEffect(() => {
+		if (state.searchTerm.length > 0) state.searchTerm = "";
+		console.log("cleared search term");
+	}, []); */
 	useEffect(() => {
 		state.ip = ip;
 		state.title = "IP Addresses";

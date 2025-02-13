@@ -25,6 +25,8 @@ export function successAlert(msg = "Deleted successfully") {
 		title: msg,
 		showConfirmButton: false,
 		timer: 2500,
+		toast: true,
+		position: "top-end",
 	});
 }
 
