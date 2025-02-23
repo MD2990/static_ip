@@ -2,7 +2,6 @@ import "./globals.css";
 import React from "react";
 import AuthProvider from "./AuthProvider";
 import { Provider } from "@components/ui/provider";
-import LogOut from "./LogOut";
 import { MyMiniIcon } from "@lib/MyIcons";
 import { Roboto_Condensed } from "next/font/google";
 const Roboto = Roboto_Condensed({ subsets: ["latin"] });
@@ -13,7 +12,7 @@ export default function RootLayout({ children }) {
 			<body suppressHydrationWarning>
 				<AuthProvider>
 					<Provider>
-						<LogOut />
+						{/* <LogOut /> */}
 						<MyMiniIcon />
 						{children}
 					</Provider>
