@@ -8,7 +8,7 @@ export function TopBtn({ title, onClick, Icons }) {
 		<IconButton
 			rounded={"full"}
 			aria-label={title}
-			variant="solid"
+			variant="surface"
 			colorPalette={"green"}
 			_hover={{
 				transition: "transform .2s ease-in-out",

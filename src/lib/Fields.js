@@ -151,7 +151,13 @@ export const CustomTextArea = ({ fieldName, labelName }) => {
 	);
 };
 
-export const CustomDropdown = ({ fieldName, labelName, arr = [], keys }) => {
+export const CustomDropdown = ({
+	fieldName,
+	labelName,
+	arr = [],
+	keys,
+	val,
+}) => {
 	return (
 		<FormikField name={fieldName}>
 			{({ field, meta }) => (
@@ -163,11 +169,21 @@ export const CustomDropdown = ({ fieldName, labelName, arr = [], keys }) => {
 				>
 					<NativeSelectRoot invalid={meta.touched && meta.error} {...field}>
 						<NativeSelectField placeholder="Select option" {...field}>
-							{arr.map((item, i) => (
-								<option key={i} value={item[keys]}>
-									{item[keys]}
+							{val && (
+								// show val because it might be deleted from the DB to avoid empty default value in Edit form
+								<option key={val} value={val}>
+									{val}
 								</option>
-							))}
+							)}
+							{arr.map(
+								(item, i) =>
+									// filter out the value that is === val to avoid duplicate
+									item[keys] !== val && (
+										<option key={i} value={item[keys]}>
+											{item[keys]}
+										</option>
+									)
+							)}
 						</NativeSelectField>
 					</NativeSelectRoot>
 				</Field>

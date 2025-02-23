@@ -87,6 +87,7 @@ export default function Edit({ data, devices, emp }) {
 										labelName="Device Type"
 										arr={devices}
 										keys={"device_type"}
+										val={device_type}
 									/>
 								</GridItem>
 								<GridItem>
@@ -95,6 +96,7 @@ export default function Edit({ data, devices, emp }) {
 										labelName="Added By"
 										arr={emp}
 										keys={"employee_name"}
+										val={added_by}
 									/>
 								</GridItem>
 

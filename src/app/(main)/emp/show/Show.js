@@ -1,6 +1,6 @@
 "use client";
 import { errorAlert, handleFormDelete, successAlert } from "@lib/Alerts";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import state from "@app/store";
 import { VStack } from "@chakra-ui/react";
 import TopArea from "@lib/TopArea";

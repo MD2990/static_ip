@@ -3,6 +3,7 @@ import Edit from "./Edit";
 import mongoose from "mongoose";
 import { notFound } from "next/navigation";
 import { getEmpById } from "@server/emp/actions";
+import Error from "@app/error";
 
 export default async function Page({ params }) {
 	const { id } = await params;
