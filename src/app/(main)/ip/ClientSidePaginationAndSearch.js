@@ -36,15 +36,15 @@ const ClientSidePaginationAndSearch = ({
 	const offset = currentPage * itemsPerPage;
 	const currentItems = filteredData().slice(offset, offset + itemsPerPage);
 
-	useEffect(() => {
-		state.searchResults = filteredData();
-	}, [filteredData, data]);
 	const filteredDataLength = filteredData().length;
 	const dataLength = data.length;
 	useEffect(() => {
+		state.searchResults = filteredData();
+	}, [filteredData, data]);
+	useEffect(() => {
 		// Show pagination if data is more than itemsPerPage after search filter applied or after render
 		setShowPagination(filteredData().length > itemsPerPage);
-	}, [dataLength, filteredDataLength]);
+	}, [dataLength, filteredDataLength, filteredData, itemsPerPage]);
 
 	const handleSearchChange = (event) => {
 		//setSearchTerm(event.target.value);

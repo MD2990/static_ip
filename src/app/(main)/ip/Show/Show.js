@@ -24,10 +24,7 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 			},
 		});
 	};
-	/* 	useEffect(() => {
-		if (state.searchTerm.length > 0) state.searchTerm = "";
-		console.log("cleared search term");
-	}, []); */
+
 	useEffect(() => {
 		state.ip = ip;
 		state.title = "IP Addresses";
@@ -49,13 +46,20 @@ export default function Show({ ip, devices, empTotal, devicesTotal }) {
 
 	return (
 		<>
-			<TopArea data={ip} path={"/ip/add"} title={"Add New IP"}></TopArea>
+			<TopArea
+				data={ip}
+				path={"/ip/add"}
+				title={"Add New IP"}
+				deviceTotal={devicesTotal}
+				empTotal={empTotal}
+			/>
 			<SearchLabels devices={devices} ip={ip} />
 			<ClientSidePaginationAndSearch
 				itemsPerPage={10}
 				data={ip}
 				renderItems={(currentItems) => (
 					<DataDisplay
+						title={"IP Addresses"}
 						headers={headers}
 						data={currentItems}
 						ids={ids}

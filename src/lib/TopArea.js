@@ -14,7 +14,13 @@ import printPdf from "@lib/print";
 import Menus, { MenuItems } from "./Menus";
 import { LuPlus, LuPrinter } from "react-icons/lu";
 
-export default function TopArea({ data, path, title }) {
+export default function TopArea({
+	data,
+	path,
+	title,
+	deviceTotal = "",
+	empTotal = "",
+}) {
 	const snap = useSnapshot(state);
 	const pathname = usePathname();
 	const router = useRouter();
@@ -57,7 +63,7 @@ export default function TopArea({ data, path, title }) {
 				/>
 			</Flex>
 
-			<Menus title="Devices">
+			<Menus title={`Devices ${Number(empTotal) ? `(${deviceTotal})` : ""}`}>
 				<MenuItems
 					text="Add"
 					path="/devices/add"
@@ -65,7 +71,7 @@ export default function TopArea({ data, path, title }) {
 				/>
 				<MenuItems text="Show" path="/devices/show" Icons={FcViewDetails} />
 			</Menus>
-			<Menus title="Employees">
+			<Menus title={`Employees ${Number(empTotal) ? `(${empTotal})` : ""}`}>
 				<MenuItems text="Add" path="/emp/add" Icons={FcBusinessman} />
 				<MenuItems text="Show" path="/emp/show" Icons={FcViewDetails} />
 			</Menus>

@@ -1,7 +1,7 @@
 import React, { useTransition } from "react";
 import { VStack, HStack, Text, Box, Button } from "@chakra-ui/react";
 
-const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
+const DataDisplay = ({ headers, data, ids, onEdit, onDelete, title }) => {
 	const [isPending, startTransition] = useTransition();
 
 	if (!data || data.length === 0) {
@@ -37,6 +37,24 @@ const DataDisplay = ({ headers, data, ids, onEdit, onDelete }) => {
 			overflowX="auto"
 		>
 			<VStack spacing={0} minW="800px">
+				<Box>
+					<Text
+						textAlign="center"
+						color="gray.600"
+						fontSize={["xl", "2xl", "3xl", "5xl"]}
+						p={6}
+						fontFamily="fantasy"
+						letterSpacing="8px"
+						textTransform="uppercase"
+						fontWeight="bold"
+						textShadow="0px 4px 12px rgba(0, 0, 0, 0.3)"
+						userSelect="none"
+						background="linear-gradient(to right, #2C5282, #63B3ED)"
+						backgroundClip="text"
+					>
+						{title || "Data Display"}
+					</Text>
+				</Box>
 				<HStack
 					w="full"
 					p={4}
